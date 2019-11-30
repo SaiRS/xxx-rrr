@@ -5,6 +5,8 @@ import logo from './logo.svg';
 import './App.css';
 // import 'gapi';
 import { Logger } from './utils';
+import { Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App: React.FC = () => {
   const signOutRef = React.useRef<HTMLButtonElement>(null);
@@ -168,6 +170,7 @@ const App: React.FC = () => {
           Sign Out
         </button>
       </header>
+      <Button>BootStrap</Button>
       <pre ref={preRef} style={{ whiteSpace: 'pre-wrap' }}></pre>
     </div>
   );

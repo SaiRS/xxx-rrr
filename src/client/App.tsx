@@ -3,8 +3,7 @@ import LogRocket from 'logrocket';
 import AV from 'leancloud-storage';
 import logo from './logo.svg';
 import './App.css';
-// import 'gapi';
-import { Logger } from './utils';
+import { CLogger } from '@cutils';
 import { Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -57,7 +56,7 @@ const App: React.FC = () => {
         // @ts-ignore
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
       } catch (error) {
-        Logger.error(error);
+        CLogger.error(error);
       }
     });
   });

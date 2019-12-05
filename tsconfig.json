@@ -16,8 +16,14 @@
     "jsx": "react",
     "baseUrl": ".",
     "paths": {
-      "@utils/*": ["src/utils/*"],
-      "@vendors/*": ["src/vendors/*"]
+      "@svendros/*": ["src/server/vendors/*"],
+      "@sutils/*": ["src/server/utils/*"],
+      "@server/*": ["src/server/*"],
+
+      "@cutils": ["src/client/utils/index"],
+      "@cutils/*": ["src/client/utils/*"],
+      "@cvendors/*": ["src/client/vendors/*"],
+      "@client/*": ["src/client/*"]
     }
   },
   "include": ["src"]

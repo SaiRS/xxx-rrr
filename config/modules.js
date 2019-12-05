@@ -74,8 +74,13 @@ function getWebpackAliases(options = {}) {
     return {
       src: paths.appSrc,
       // 自定义alias
-      '@vendors': path.resolve(__dirname, '..', 'src', 'vendors'),
-      '@utils': path.resolve(__dirname, '..', 'src', 'utils'),
+      '@svendors': path.resolve(__dirname, '..', 'src', 'server', 'vendors'),
+      '@sutils': path.resolve(__dirname, '..', 'src', 'server', 'utils'),
+      '@server': path.resolve(__dirname, '..', 'src', 'server'),
+
+      '@cvendors': path.resolve(__dirname, '..', 'src', 'client', 'vendors'),
+      '@cutils': path.resolve(__dirname, '..', 'src', 'client', 'utils'),
+      '@client': path.resolve(__dirname, '..', 'src', 'client'),
     };
   }
 }

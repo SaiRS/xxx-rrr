@@ -1,6 +1,8 @@
 import Hapi from 'hapi';
 import { validate } from './auth';
 
+import './database/connection';
+
 const server = new Hapi.Server({
   port: 8686,
   host: 'localhost',
@@ -19,6 +21,10 @@ const init = async () => {
   });
 
   await server.register([
+    {
+      // 服务器状态监测
+      plugin: require('hapijs-status-monitor'),
+    },
     {
       // 注册vision插件
       plugin: require('@hapi/vision'),

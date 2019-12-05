@@ -1,4 +1,4 @@
-import { XXXRequest } from '@vendors/requests';
+import { XXXRequest } from '@cvendors/requests';
 
 // 定制化timing的请求
 export const timingRequest = new XXXRequest({

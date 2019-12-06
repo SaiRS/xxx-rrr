@@ -23,7 +23,12 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-// const eslint = require('eslint');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
+const PurgecssPlugin = require('purgecss-webpack-plugin');
+const glob = require('glob');
+
+console.log(...glob.sync(`${paths.appSrc}`));
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -100,6 +105,7 @@ module.exports = function(webpackEnv) {
           // https://github.com/facebook/create-react-app/issues/2677
           ident: 'postcss',
           plugins: () => [
+            require('tailwindcss'),
             require('postcss-flexbugs-fixes'),
             require('postcss-preset-env')({
               autoprefixer: {
@@ -543,6 +549,11 @@ module.exports = function(webpackEnv) {
             : undefined,
         ),
       ),
+      new PurgecssPlugin({
+        paths: [
+          ...glob.sync(`${paths.appSrc}/**/*.{js,ts,jsx,tsx}`, { nodir: true }),
+        ],
+      }),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
@@ -659,6 +670,8 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      process.env.REACT_APP_WEBPACK_ANALYSIS === 'true' &&
+        new BundleAnalyzerPlugin(),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

@@ -17,18 +17,23 @@ const _routes: ServerRoute[] = [];
 glob
   .sync(path.resolve(process.cwd(), 'src/server/routes/**/*-route.{ts,js}'))
   .forEach((file) => {
-    let importedRoutes = require(path.resolve(file));
-
+    let importedRoutes: Record<string, any> = require(path.resolve(file));
     try {
-      if (Array.isArray(importedRoutes)) {
-        for (let route of importedRoutes) {
-          routeSchema.validate(route);
+      // 获取values
+      let keys = Object.keys(importedRoutes);
+      for (let key of keys) {
+        if (Array.isArray(importedRoutes[key])) {
+          for (let route of importedRoutes[key]) {
+            routeSchema.validate(route);
+            // 添加
+            _routes.push(route);
+          }
+        } else {
+          routeSchema.validate(importedRoutes[key]);
+          // 添加
+          _routes.push(importedRoutes[key]);
         }
-      } else {
-        routeSchema.validate(importedRoutes);
       }
-      // 添加
-      _routes.push(require(path.resolve(file)));
     } catch (error) {
       console.error(error);
     }

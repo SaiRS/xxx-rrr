@@ -1,16 +1,15 @@
 import createError from 'http-errors';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Response, Request } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 
 import addRequestId from 'express-request-id';
-import {
-  loggerRequestMiddleware,
-  loggerResponseMiddleware,
-} from '@sutils/logger';
-// var indexRouter = require('./routes/index');
+import { routers } from './routes';
+import logger from 'morgan';
 
-const app = express();
+import { enableSwaggerDocServer } from './docs';
+
+const app: express.Express = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,19 +20,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(logger('dev'));
 
-// app.use('/', indexRouter);
+// 加载route
+for (let config of routers) {
+  app.use(config.path, config.router);
+}
 
-app.use(loggerRequestMiddleware);
-app.use(loggerResponseMiddleware);
+// swagger docs
+enableSwaggerDocServer(app);
 
 // catch 404 and forward to error handler
-app.use(function(req: Request, res: Response, next: NextFunction) {
+app.use(function(req, res: Response, next: NextFunction) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(
+app.use(function errorMiddleware(
   err: { message: any; status: any },
   req: Request,
   res: Response,

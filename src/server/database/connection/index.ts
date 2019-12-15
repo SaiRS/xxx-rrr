@@ -10,6 +10,8 @@ mongoose
     {
       useNewUrlParser: true,
       autoIndex: false,
+      useUnifiedTopology: true,
+      keepAlive: true,
     },
   )
   .catch((reason: any) => {
@@ -29,5 +31,5 @@ db.on('error', (err: Error) => {
 
 db.once('open', function() {
   // we're connected!
-  console.log('mongo 连接成功');
+  SLogger.info('mongo 连接成功');
 });

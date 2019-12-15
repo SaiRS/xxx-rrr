@@ -1,0 +1,46 @@
+{
+  // 使用 IntelliSense 了解相关属性。
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "server debug",
+      "runtimeExecutable": "node",
+      "cwd": "${workspaceRoot}",
+      "args": ["${workspaceFolder}/src/server/www.ts"],
+      "skipFiles": ["<node_internals>/**"],
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "env": { "DEBUG": "app:*" }
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "client测试",
+      "port": 9222,
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "demo-test",
+      "program": "${workspaceFolder}/demo.js",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "client webpack 测试",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/scripts/start.js",
+      "outFiles": ["${workspaceFolder}/**/*.js"]
+    }
+  ]
+}

@@ -2,6 +2,9 @@ import createError from 'http-errors';
 import express, { NextFunction, Response, Request } from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
+import '@server/database/connection';
 
 import addRequestId from 'express-request-id';
 import { routers } from './routes';
@@ -22,10 +25,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 
+app.use(cors());
+
 // 加载route
 for (let config of routers) {
   app.use(config.path, config.router);
 }
+
+app.use('/', function(req, res) {
+  res.send('hello');
+});
 
 // swagger docs
 enableSwaggerDocServer(app);

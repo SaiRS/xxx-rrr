@@ -33,8 +33,8 @@ const App: React.FC = () => {
   });
 
   React.useEffect(() => {
-    // 初始化logrocket
-    LogRocket.init('fj281r/xxx-rrr');
+    // TODO: 初始化logrocket
+    // LogRocket.init('fj281r/xxx-rrr');
   });
 
   // React.useEffect(() => {

@@ -1,10 +1,12 @@
 import bunyan from 'bunyan';
 import { NextFunction, Request, Response } from 'express';
 
+import debug from 'debug';
+
 const _logger = bunyan.createLogger({
   level: process.env.NODE_ENV === 'production' ? bunyan.WARN : bunyan.DEBUG,
   name: 'rrr-server',
-  src: true,
+  // src: true,
   streams: [
     {
       name: 'normal',
@@ -23,7 +25,7 @@ const _logger = bunyan.createLogger({
 
 // S for Server,
 export const SLogger = {
-  debug: _logger.debug.bind(_logger),
+  debug: debug('app:server'),
   info: _logger.info.bind(_logger),
   warn: _logger.warn.bind(_logger),
   error: _logger.error.bind(_logger),
@@ -43,7 +45,7 @@ export function loggerRequestMiddleware(
     },
     true,
   );
-  log.info({ req: req });
+  // log.info({ req: req });
   next();
 }
 
@@ -62,7 +64,7 @@ export function loggerResponseMiddleware(
       },
       true,
     );
-    log.info({ res: res }, 'response');
+    // log.info({ res: res }, 'response');
   }
   res.on('finish', afterResponse);
   res.on('close', afterResponse);

@@ -13,7 +13,7 @@ const _routes: RouterConfig[] = [];
 // 获取server/routes文件夹下边的所有的以-route.ts或-route.js结尾的文件
 // 把这些文件当作是路由的配置文件，统一起来集中管理
 glob
-  .sync(path.resolve(process.cwd(), 'src/server/routes/api/**/index.ts'))
+  .sync(path.resolve(process.cwd(), 'src/server/routes/**/index.ts'))
   .forEach((file) => {
     let importedRoutes: Record<string, any> = require(path.resolve(file));
     // _routes.push(importedRoutes);

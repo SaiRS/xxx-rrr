@@ -13,26 +13,26 @@ export class XXXRequest {
     url: string,
     config?: XXXRequestConfig,
   ): Promise<R> {
-    return axios.get<T, R>(url, config);
+    return this._instance.get<T, R>(url, config);
   }
 
   post<T = any, R = XXXResponse<T>>(
     url: string,
-    data: any,
+    data?: any,
     config?: XXXRequestConfig,
   ): Promise<R> {
-    return axios.post<T, R>(url, data, config);
+    return this._instance.post<T, R>(url, data, config);
   }
 
   delete<T = any, R = XXXResponse<T>>(
     url: string,
     config?: XXXRequestConfig,
   ): Promise<R> {
-    return axios.delete<T, R>(url, config);
+    return this._instance.delete<T, R>(url, config);
   }
 
   request<T = any, R = XXXResponse<T>>(config: XXXRequestConfig): Promise<R> {
-    return axios.request<T, R>(config);
+    return this._instance.request<T, R>(config);
   }
 
   // 其他方法

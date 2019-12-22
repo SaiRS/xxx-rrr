@@ -11,9 +11,7 @@ const TagsSerializer = new Serializer('tags', { attributes: ['name'] });
 
 const CreateTagSchema = yup.object({
   name: yup.string().required(),
-  groupName: yup.string().default(''),
   color: yup.string(),
-  parent: yup.string().default(''),
 });
 
 /**

@@ -1,9 +1,10 @@
-import { timingRequest } from './../base';
+import { timingRequest } from '../base';
 import { Router, Response, Request } from 'express';
 
-import { SLogger } from '@sutils/logger';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 import { Serializer, Error as SerializerError } from 'jsonapi-serializer';
+import { SLogger } from '@sutils/logger';
 import uuid from 'uuid';
 
 // new Serializer()
@@ -21,13 +22,24 @@ import uuid from 'uuid';
 //   children: IBTimingProject[];
 // }
 
-export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
-  router.post('/projects/hierarchy', function projectHierarachy(
-    req: Request,
+interface IParam extends ParamsDictionary {
+  activityId: string;
+}
+
+/**
+ * @export
+ *
+ * @param {Router} router
+ * @returns {Router}
+ */
+export function makeTimingGetTaskDetailRouter(router: Router): Router {
+  router.post('/time-entries/:activityId', function taskDetail(
+    req: Request<IParam>,
     res: Response,
   ) {
+    let activityId = req.params.activityId;
     timingRequest
-      .get('/projects/hierarchy')
+      .get(`/time-entries/${activityId}`, req.query)
       .then((response) => {
         // TODO: 适配层
         // 直接返回
@@ -42,7 +54,7 @@ export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
           title: '',
           detail: error.message,
           source: {
-            pointer: '/projects/hierarchy',
+            pointer: '/time-entries',
             parameter: JSON.stringify(req.query),
           },
           links: {},

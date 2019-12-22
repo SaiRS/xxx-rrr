@@ -1,33 +1,29 @@
-import { timingRequest } from './../base';
+import { timingRequest } from '../base';
 import { Router, Response, Request } from 'express';
-
-import { SLogger } from '@sutils/logger';
+import { ParamsDictionary } from 'express-serve-static-core';
 
 import { Serializer, Error as SerializerError } from 'jsonapi-serializer';
+import { SLogger } from '@sutils/logger';
 import uuid from 'uuid';
 
-// new Serializer()
+interface IParam extends ParamsDictionary {
+  projectId: string;
+}
 
-// interface IBTimingProject {
-//   self: string; // link链接
-//   title: string;
-//   title_chain: string[]; // 名字的层级顺序
-//   color: string; // 颜色
-//   productivity_score: number; // 0 ~ 1, 生产力分数
-//   is_archived: boolean; // 是否归档
-//   parent: {
-//     self: string;
-//   } | null;
-//   children: IBTimingProject[];
-// }
-
-export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
-  router.post('/projects/hierarchy', function projectHierarachy(
-    req: Request,
+/**
+ * 获取项目详情
+ * @export
+ * @param {Router} router
+ * @returns {Router}
+ */
+export function makeTimingGetProjectDetailRouter(router: Router): Router {
+  router.post('/projects/:projectId', function projectDetail(
+    req: Request<IParam>,
     res: Response,
   ) {
+    let projectId = req.params.projectId;
     timingRequest
-      .get('/projects/hierarchy')
+      .get(`/projects/${projectId}`)
       .then((response) => {
         // TODO: 适配层
         // 直接返回
@@ -42,8 +38,8 @@ export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
           title: '',
           detail: error.message,
           source: {
-            pointer: '/projects/hierarchy',
-            parameter: JSON.stringify(req.query),
+            pointer: `/projects/${projectId}`,
+            parameter: JSON.stringify(req.params),
           },
           links: {},
           meta: {},

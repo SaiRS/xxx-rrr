@@ -1,9 +1,8 @@
-import { timingRequest } from './../base';
+import { timingRequest } from '../base';
 import { Router, Response, Request } from 'express';
 
-import { SLogger } from '@sutils/logger';
-
 import { Serializer, Error as SerializerError } from 'jsonapi-serializer';
+import { SLogger } from '@sutils/logger';
 import uuid from 'uuid';
 
 // new Serializer()
@@ -21,13 +20,16 @@ import uuid from 'uuid';
 //   children: IBTimingProject[];
 // }
 
-export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
-  router.post('/projects/hierarchy', function projectHierarachy(
-    req: Request,
-    res: Response,
-  ) {
+/**
+ * @export
+ *
+ * @param {Router} router
+ * @returns {Router}
+ */
+export function makeTimingGetListProjectsRouter(router: Router): Router {
+  router.post('/projects', function projectList(req: Request, res: Response) {
     timingRequest
-      .get('/projects/hierarchy')
+      .get('/projects')
       .then((response) => {
         // TODO: 适配层
         // 直接返回
@@ -42,7 +44,7 @@ export function makeTimingGetHierarchyProjectsRouter(router: Router): Router {
           title: '',
           detail: error.message,
           source: {
-            pointer: '/projects/hierarchy',
+            pointer: '/projects',
             parameter: JSON.stringify(req.query),
           },
           links: {},

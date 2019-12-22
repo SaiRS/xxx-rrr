@@ -87,7 +87,6 @@ export default function TagsSettingPage(
               <tr key={tag.id}>
                 <td>{index}</td>
                 <td>{tag.name}</td>
-                <td>{tag.groupName}</td>
               </tr>
             );
           })}

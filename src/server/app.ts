@@ -1,3 +1,4 @@
+import { SLogger } from '@sutils/logger';
 import createError from 'http-errors';
 import express, { NextFunction, Response, Request } from 'express';
 import path from 'path';

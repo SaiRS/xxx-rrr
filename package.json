@@ -100,7 +100,8 @@
     "start": "DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "start:server": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts"
+    "start:server": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
+    "start:server:watch": "nodemon --inspect"
   },
   "eslintConfig": {
     "extends": [
@@ -162,6 +163,7 @@
     "express-swagger-generator": "^1.1.15",
     "husky": "^3.0.5",
     "lint-staged": "^9.4.0",
+    "nodemon": "^2.0.2",
     "prettier": "1.18.2",
     "purgecss": "^1.4.1",
     "purgecss-webpack-plugin": "^1.6.0",
@@ -241,5 +243,12 @@
     "presets": [
       "react-app"
     ]
+  },
+  "nodemonConfig": {
+    "exec": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
+    "ignore": ["*.test.ts", "__tests__/*"],
+    "execMap": {
+      "ts": "ts-node"
+    }
   }
 }

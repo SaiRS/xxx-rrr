@@ -5,8 +5,6 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
-import '@server/database/connection';
-
 import addRequestId from 'express-request-id';
 import { routers } from './routes';
 import logger from 'morgan';

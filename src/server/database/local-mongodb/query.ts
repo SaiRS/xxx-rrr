@@ -148,6 +148,58 @@ export class MongoQuery<T = any> implements IRQuery {
     });
   }
 
+  delete(): Promise<void> {
+    // eslint-disable-next-line compat/compat
+    return new Promise((resolve, reject) => {
+      this.query.remove((err: Error) => {
+        if (!err) {
+          resolve();
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  deleteOne(): Promise<IRDocument> {
+    // eslint-disable-next-line compat/compat
+    return new Promise((resolve, reject) => {
+      this.query.findOneAndRemove((err: Error, doc: mongoose.Document) => {
+        if (!err) {
+          resolve(new MongoDocument(doc));
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  update(criteria: any): Promise<void> {
+    // eslint-disable-next-line compat/compat
+    return new Promise((resolve, reject) => {
+      this.query.update((err: Error) => {
+        if (!err) {
+          resolve();
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
+  updateOne(criteria: any): Promise<IRDocument> {
+    // eslint-disable-next-line compat/compat
+    return new Promise((resolve, reject) => {
+      this.query.findOneAndUpdate((err: Error, doc: mongoose.Document) => {
+        if (!err) {
+          resolve(new MongoDocument(doc));
+        } else {
+          reject(err);
+        }
+      });
+    });
+  }
+
   // 逻辑运算
   and(...queries: MongoQuery[]): this {
     this.query.and(queries);

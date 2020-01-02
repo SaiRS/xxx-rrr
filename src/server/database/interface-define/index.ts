@@ -98,6 +98,10 @@ export interface IRQuery {
   count(): Promise<number>;
   find(criteria?: any): Promise<IRDocument[]>;
   findOne(criteria?: any): Promise<null | IRDocument>;
+  delete(): Promise<void>;
+  deleteOne(): Promise<IRDocument>;
+  update(criteria: any): Promise<void>;
+  updateOne(criteria: any): Promise<IRDocument>;
 
   // 逻辑查询
   and(...queries: this[]): this;

@@ -130,6 +130,36 @@ export class LeanCloudQuery implements IRQuery {
       }
     });
   }
+  async delete(): Promise<void> {
+    return this.query.destroyAll();
+  }
+  async deleteOne(): Promise<IRDocument> {
+    return this.findOne().then((result: null | IRDocument) => {
+      if (result) {
+        // eslint-disable-next-line compat/compat
+        return Promise.resolve(result);
+      } else {
+        // eslint-disable-next-line compat/compat
+        return Promise.reject(result);
+      }
+    });
+  }
+  async update(criteria: any): Promise<void> {
+    // eslint-disable-next-line compat/compat
+    return Promise.resolve();
+    // this.query.
+  }
+
+  async updateOne(criteria: any): Promise<IRDocument> {
+    return this.findOne().then((result: null | IRDocument) => {
+      if (result) {
+        return result.save(criteria);
+      } else {
+        // eslint-disable-next-line compat/compat
+        return Promise.reject(result);
+      }
+    });
+  }
 
   and(...queries: LeanCloudQuery[]): this {
     this.query = AV.Query.and(this.query, ...queries.map((item) => item.query));

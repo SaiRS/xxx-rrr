@@ -1,11 +1,17 @@
 import { getTagsRequestUrl } from './utils';
 import { rrrRequest } from '../base';
-import { ITag } from '@server/database';
+import { XXXResponse } from '@cvendors/requests';
+import { ITag } from 'src/types';
 
-export async function tagsAddRequest(payload: Omit<ITag, 'id'>) {
+/**
+ * 新增一个标签
+ * @export
+ * @param {Omit<ITag, 'id'>} payload 请求的payload
+ * @returns {ITag} 新增的标签
+ */
+export async function tagsAddRequest(payload: Omit<ITag, 'id'>): Promise<ITag> {
   let url = getTagsRequestUrl('tags');
-  let result = await rrrRequest.post(url, {
-    params: payload,
-  });
-  return result;
+  let result: XXXResponse<ITag> = await rrrRequest.post<ITag>(url, payload);
+
+  return result.data;
 }

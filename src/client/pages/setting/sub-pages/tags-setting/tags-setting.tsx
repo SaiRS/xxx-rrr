@@ -6,11 +6,11 @@ import { CLogger } from '@cutils';
 import classNames from 'classnames';
 
 import { Table, Modal, Button, Form } from 'react-bootstrap';
-import { ITag } from '@server/database';
 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { tagsAddRequest } from '@cutils/request/rrr/tags/tags-add';
+import { ITag } from 'src/types';
 
 const schema = yup.object({
   name: yup.string().required(),

@@ -24,6 +24,14 @@ export class XXXRequest {
     return this._instance.post<T, R>(url, data, config);
   }
 
+  put<T = any, R = XXXResponse<T>>(
+    url: string,
+    data?: any,
+    config?: XXXRequestConfig,
+  ) {
+    return this._instance.put<T, R>(url, data, config);
+  }
+
   delete<T = any, R = XXXResponse<T>>(
     url: string,
     config?: XXXRequestConfig,

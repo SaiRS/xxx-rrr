@@ -85,7 +85,6 @@
     "swagger-jsdoc": "^3.5.0",
     "tailwindcss": "^1.1.4",
     "terser-webpack-plugin": "1.4.1",
-    "ts-node": "^8.5.4",
     "ts-pnp": "1.1.4",
     "typescript": "3.7.2",
     "url-loader": "2.1.0",
@@ -100,6 +99,7 @@
     "start": "DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
+    "test:server": "nodemon --exec 'mocha -R min -r ts-node/register -r tsconfig-paths/register'",
     "start:server": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
     "start:server:watch": "nodemon --inspect"
   },
@@ -130,6 +130,7 @@
     "@commitlint/config-conventional": "^8.2.0",
     "@types/bcrypt": "^3.0.0",
     "@types/bunyan": "^1.8.6",
+    "@types/chai": "^4.2.7",
     "@types/classnames": "^2.2.9",
     "@types/config": "0.0.36",
     "@types/cookie-parser": "^1.4.2",
@@ -143,6 +144,7 @@
     "@types/jsonapi-serializer": "^3.6.2",
     "@types/loadable__component": "^5.10.0",
     "@types/lodash": "^4.14.149",
+    "@types/mocha": "^5.2.7",
     "@types/mongoose": "^5.5.32",
     "@types/morgan": "^1.7.37",
     "@types/pino": "^5.8.13",
@@ -153,6 +155,7 @@
     "@types/uuid": "^3.4.6",
     "@types/yup": "^0.26.26",
     "autoprefixer": "^9.7.3",
+    "chai": "^4.2.0",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "eslint-config-prettier": "^6.1.0",
@@ -163,6 +166,7 @@
     "express-swagger-generator": "^1.1.15",
     "husky": "^3.0.5",
     "lint-staged": "^9.4.0",
+    "mocha": "^7.0.0",
     "nodemon": "^2.0.2",
     "prettier": "1.18.2",
     "purgecss": "^1.4.1",
@@ -176,6 +180,7 @@
     "stylelint-no-unsupported-browser-features": "^3.0.2",
     "stylelint-prettier": "^1.0.6",
     "swagger-ui-express": "^4.1.2",
+    "ts-node": "^8.5.4",
     "tsconfig-paths": "^3.9.0",
     "webpack-bundle-analyzer": "^3.6.0"
   },
@@ -246,7 +251,6 @@
   },
   "nodemonConfig": {
     "exec": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
-    "ignore": ["*.test.ts", "__tests__/*"],
     "execMap": {
       "ts": "ts-node"
     }

@@ -20,7 +20,12 @@ export function getLeanCloundDB(): IRDatabase {
      * 创建数据表
      * @param {string} name
      */
-    getModel(name: string, protoProps: Object = {}, classProps: Object = {}) {
+    getModel(
+      name: string,
+      protoProps: Object = {},
+      classProps: Object = {},
+      schemaProps = {},
+    ) {
       let model = getLeanCloudModel(name, protoProps, classProps);
       return model;
     },

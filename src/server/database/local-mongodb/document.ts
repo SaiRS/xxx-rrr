@@ -20,24 +20,23 @@ export class MongoDocument implements IRDocument {
     }
 
     // eslint-disable-next-line compat/compat
-    return new Proxy(this, {
-      set(
-        target: MongoDocument,
-        key: string,
-        value: any,
-        receiver: any,
-      ): boolean {
-        // TODO: 暂且不做任何处理
-        // 完成MongoDB数据存储实现之后再做修改
-        // 希望能够做到
-        // document.prop = 'ss'; // 将赋值转换为set('prop', 'ss);
-        // eslint-disable-next-line compat/compat
-        Reflect.set(target, key, value, receiver);
+    // return new Proxy(this, {
+    //   set(
+    //     target: MongoDocument,
+    //     key: string,
+    //     value: any,
+    //     receiver: any,
+    //   ): boolean {
+    //     // 完成MongoDB数据存储实现之后再做修改
+    //     // 希望能够做到
+    //     // document.prop = 'ss'; // 将赋值转换为set('prop', 'ss);
+    //     // eslint-disable-next-line compat/compat
+    //     Reflect.set(target, key, value, receiver);
 
-        // 严格模式下需要返回true
-        return true;
-      },
-    });
+    //     // 严格模式下需要返回true
+    //     return true;
+    //   },
+    // });
   }
 
   get id(): string {

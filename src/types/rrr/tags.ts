@@ -6,6 +6,5 @@ export interface ITag {
   note: string; // 备注
   description: string; // 描述
 
-  projectId: string; // 所属的项目id
-  creatorId: string; // 创建者id
+  // creatorId: string; // 创建者id
 }

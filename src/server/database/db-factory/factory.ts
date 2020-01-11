@@ -1,4 +1,4 @@
-import { IRDatabase } from '../interface-define';
+import { IRDatabase, IRModel } from '../interface-define';
 import { getLeanCloundDB } from '../leancloud/db';
 
 /**
@@ -14,4 +14,9 @@ import { getLeanCloundDB } from '../leancloud/db';
  */
 export function getDBInstance(): IRDatabase {
   return getLeanCloundDB();
+}
+
+export function getDBModel(name: string): IRModel {
+  let db = getDBInstance();
+  return db.getModel(name, {}, {}, {});
 }

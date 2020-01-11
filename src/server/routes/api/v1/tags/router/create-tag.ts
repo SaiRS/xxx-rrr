@@ -2,12 +2,9 @@ import { Router, Request, Response } from 'express';
 import * as yup from 'yup';
 
 import { SLogger } from '@sutils/logger';
-import { TagModal } from '@server/database';
 
-import { Serializer } from 'jsonapi-serializer';
-
-// 让数据符合JSON:API格式
-const TagsSerializer = new Serializer('tags', { attributes: ['name'] });
+import { getDBModel } from '@server/database/db-factory';
+import { tagSerializer, errorSerializer } from '@server/serializers';
 
 const CreateTagSchema = yup.object({
   name: yup.string().required(),
@@ -27,15 +24,18 @@ export function makeCreateTagRouter(router: Router): Router {
     CreateTagSchema.validate(req.body.params)
       .then(async () => {
         // 保存数据库
-        let tagDoc = new TagModal(req.body.params);
+        let model = getDBModel('tags');
+        let tagDoc = model.createDocument(req.body.params);
         let result = await tagDoc.save();
-        res.json(result);
+
+        // TagsSerializer
+        res.json(tagSerializer(result.toJSON()));
       })
       .catch((error: Error) => {
-        SLogger.error(error);
-        res.json({
-          error: error.message,
-        });
+        let serializedError = errorSerializer(error);
+
+        SLogger.error(error, serializedError);
+        res.json(serializedError);
       });
   });
 

@@ -1,6 +1,13 @@
 // 数据库
+export type IRDataBaseInitCallbackFunc = (err?: Error) => void;
+
+export interface ISchemaProps {
+  definition: Record<string, any>;
+  options?: Record<string, any>;
+}
+
 export interface IRDatabase {
-  init(): void;
+  init(opt: Record<string, any>, callback?: IRDataBaseInitCallbackFunc): void;
   destory(): void;
 
   /**
@@ -11,7 +18,12 @@ export interface IRDatabase {
    * @returns {IRModel}
    * @memberof IRDatabase
    */
-  getModel(name: string, protoProps: Object, classProps: Object): IRModel;
+  getModel(
+    name: string,
+    protoProps?: Object,
+    classProps?: Object,
+    schemaProps?: ISchemaProps,
+  ): IRModel;
 }
 
 // 数据表
@@ -29,6 +41,17 @@ export interface IRModel {
   findById(id: string): Promise<null | IRDocument>;
   findOne(conditions?: any): Promise<null | IRDocument>;
 
+  insertMany(docs: IRDocument[]): Promise<IRDocument[]>;
+
+  deleteMany(conditions?: any): Promise<void>;
+  deleteOne(conditions?: any): Promise<null | IRDocument>;
+
+  updateOne(
+    conditions?: any,
+    updates?: Record<string, any>,
+  ): Promise<IRDocument>;
+  updateMany(conditions?: any, updates?: Record<string, any>): Promise<void>;
+
   /**************** query相关 ***********************/
   createQuery(): IRQuery;
 }
@@ -44,7 +67,7 @@ export interface IRDocument {
   // get<T = any>(key: string): T {
   //   throw new Error('子类需重载');
   // }
-  id: string | undefined;
+  id: string;
 
   equals(doc: IRDocument): boolean;
 
@@ -106,6 +129,7 @@ export interface IRQuery {
   // 逻辑查询
   and(...queries: this[]): this;
   or(...queries: this[]): this;
+  not(...queries: this[]): this;
 
   // 查询结果的操作
   // count(): Promise<number>; // 获取数量

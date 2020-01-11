@@ -1,23 +1,16 @@
-import { IRQuery } from './../interface-define/index';
+import { IRQuery, ISchemaProps } from './../interface-define/index';
 import { IRModel, IRDocument } from '../interface-define';
 import mongoose from 'mongoose';
 import { MongoDocument } from './document';
 import { MongoQuery } from './query';
 
-let existModels: Record<string, MongoDBModel> = {};
 export function getMongoDBModel(
   name: string,
-  protoProps: Object,
-  classProps: Object,
+  protoProps: Object = {},
+  classProps: Object = {},
+  schemaProps: ISchemaProps = { definition: {} },
 ): MongoDBModel {
-  let model = existModels[name];
-
-  if (!model) {
-    model = new MongoDBModel(name, protoProps, classProps);
-    existModels[name] = model;
-  }
-
-  return model;
+  return new MongoDBModel(name, protoProps, classProps, schemaProps);
 }
 
 /**
@@ -37,48 +30,59 @@ class MongoDBModel implements IRModel {
    * @param {string} name model的类名
    * @param {Record<string, any>} [protoProps={}] 实例属性，可以有函数，使用函数时，this指向MongoDBModel，不要使用箭头函数
    * @param {Record<string, any>} [classProps={}] 类属性，可以有函数，使用函数时，this指向MongoDBModel，其中带有query开头的函数会被放置在schema的query中， 不要使用箭头函数
+   * @param {Record<string, any>} [schemaProps={}] schemaProps
    * @memberof MongoDBModel
    */
   constructor(
     name: string,
     protoProps: Record<string, any> = {},
     classProps: Record<string, any> = {},
+    schemaProps: ISchemaProps = { definition: {} },
   ) {
-    this.schema = new mongoose.Schema();
+    // 是否存在旧的modal
+    if (mongoose.modelNames().includes(name)) {
+      this.model = mongoose.models[name];
+      this.schema = this.model.schema;
+    } else {
+      this.schema = new mongoose.Schema(
+        schemaProps.definition,
+        schemaProps.options,
+      );
 
-    // instance methods
-    let protoPropKeys = Object.keys(protoProps);
-    for (let key of protoPropKeys) {
-      if (typeof protoProps[key] === 'function') {
-        // 定义instance methods
-        this.schema.method(key, protoProps[key]);
-        // 或者另外一种写法
-        // this.schema.methods[key] = protoProps[key];
-      }
-    }
-
-    // class methods
-    const classPropKeys = Object.keys(classProps);
-    for (let key of classPropKeys) {
-      if (typeof classProps[key] === 'function') {
-        // 是不是query开始的
-        if (key.match(/^query/)) {
-          // 定义静态的query methods
-          this.schema.query[key] = classProps[key];
-          continue;
+      // instance methods
+      let protoPropKeys = Object.keys(protoProps);
+      for (let key of protoPropKeys) {
+        if (typeof protoProps[key] === 'function') {
+          // 定义instance methods
+          this.schema.method(key, protoProps[key]);
+          // 或者另外一种写法
+          // this.schema.methods[key] = protoProps[key];
         }
-
-        // TODO: hooks支持
-        // if (key.match(/^hooks/)) {
-
-        // }
-
-        // 定义class methods
-        this.schema.static(key, classProps[key]);
       }
-    }
 
-    this.model = mongoose.model(name, this.schema);
+      // class methods
+      const classPropKeys = Object.keys(classProps);
+      for (let key of classPropKeys) {
+        if (typeof classProps[key] === 'function') {
+          // 是不是query开始的
+          if (key.match(/^query/)) {
+            // 定义静态的query methods
+            this.schema.query[key] = classProps[key];
+            continue;
+          }
+
+          // TODO: hooks支持
+          // if (key.match(/^hooks/)) {
+
+          // }
+
+          // 定义class methods
+          this.schema.static(key, classProps[key]);
+        }
+      }
+
+      this.model = mongoose.model(name, this.schema);
+    }
   }
 
   /******************** 增 *************************/
@@ -89,7 +93,8 @@ class MongoDBModel implements IRModel {
   }
 
   createQuery(): IRQuery {
-    let query = new mongoose.Query();
+    // let query = new mongoose.Query();
+    let query = this.model.find();
     return new MongoQuery(query);
   }
 
@@ -102,11 +107,64 @@ class MongoDBModel implements IRModel {
 
   findById(id: string): Promise<null | IRDocument> {
     let query = this.createQuery();
-    return query.equalTo('id', id).findOne();
+    return query.equalTo('_id', id).findOne();
   }
 
   findOne<T = any>(conditions?: any): Promise<null | IRDocument> {
     let query = this.createQuery();
     return query.findOne(conditions);
+  }
+
+  async deleteMany(conditions?: any): Promise<void> {
+    return this.model.deleteMany(conditions).then(() => {
+      return;
+    });
+  }
+
+  async deleteOne(conditions?: any): Promise<IRDocument> {
+    return this.findOne(conditions).then((doc: IRDocument | null) => {
+      if (doc) {
+        return doc.delete();
+      } else {
+        // eslint-disable-next-line compat/compat
+        return Promise.reject(new Error('没有找到该对象'));
+      }
+    });
+  }
+
+  async insertMany(docs: IRDocument[]): Promise<IRDocument[]> {
+    let resultDocs = docs.map((doc) => doc.toJSON());
+    let newDocs = await this.model.insertMany(resultDocs);
+    return newDocs.map((nDoc) => this.createDocument(nDoc));
+  }
+
+  async updateOne(
+    conditions?: any,
+    updates?: Record<string, any>,
+  ): Promise<IRDocument> {
+    let query = this.createQuery();
+    return query.findOne(conditions).then((doc: IRDocument | null) => {
+      if (doc) {
+        let normalizedUpdates = updates ? updates : {};
+        for (let key of Object.keys(normalizedUpdates)) {
+          // doc
+          doc.set(key, normalizedUpdates[key]);
+        }
+
+        return doc.save();
+      } else {
+        // eslint-disable-next-line compat/compat
+        return Promise.reject(new Error('没有找到该对象'));
+      }
+    });
+  }
+
+  async updateMany(
+    conditions?: any,
+    updates?: Record<string, any>,
+  ): Promise<void> {
+    return this.model.updateMany(conditions, updates).then(() => {
+      return;
+    });
   }
 }

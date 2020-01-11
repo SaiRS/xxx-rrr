@@ -202,11 +202,32 @@ export class MongoQuery<T = any> implements IRQuery {
 
   // 逻辑运算
   and(...queries: MongoQuery[]): this {
-    this.query.and(queries);
+    let orQueries = queries.map((qur) => qur.query.getQuery());
+    let queryJson = this.query.getQuery();
+
+    // 重置一次
+    this.query.setQuery({});
+    this.query = this.query.and([queryJson, ...orQueries]);
     return this;
   }
+
   or(...queries: MongoQuery[]): this {
-    this.query.or(queries);
+    let orQueries = queries.map((qur) => qur.query.getQuery());
+    let queryJson = this.query.getQuery();
+
+    // 重置一次
+    this.query.setQuery({});
+    this.query = this.query.or([queryJson, ...orQueries]);
+
+    return this;
+  }
+  not(...queries: MongoQuery[]): this {
+    let orQueries = queries.map((qur) => qur.query.getQuery());
+    let queryJson = this.query.getQuery();
+
+    // 重置一次
+    this.query.setQuery({});
+    this.query = this.query.nor([queryJson, ...orQueries]);
     return this;
   }
 }

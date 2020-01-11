@@ -1,17 +1,45 @@
-import { IRModel } from './../interface-define/index';
+import {
+  IRModel,
+  IRDataBaseInitCallbackFunc,
+  ISchemaProps,
+} from './../interface-define/index';
 import { IRDatabase } from '../interface-define';
 
 import { SLogger } from '@sutils/logger';
 import mongoose from 'mongoose';
 import Config from 'config';
 import { getMongoDBModel } from './model';
+import { TagSchemaDefinition } from './models';
+
+function defineDefaultModals() {
+  // tags
+  getMongoDBModel(
+    'tags',
+    {},
+    {},
+    {
+      definition: TagSchemaDefinition,
+    },
+  );
+}
 
 export function getMongoDB(): IRDatabase {
   let isInited: boolean = false;
   let isIniting: boolean = false;
 
   return {
-    init: function initMongoDB() {
+    init: function initMongoDB(
+      opt: {
+        host?: string;
+        port?: string;
+        database?: string;
+      } = {
+        host: Config.get('Mongod.host'),
+        port: Config.get('Mongod.port'),
+        database: Config.get('Mongod.database'),
+      },
+      callback?: IRDataBaseInitCallbackFunc,
+    ) {
       if (isInited || isIniting) {
         return;
       }
@@ -19,21 +47,20 @@ export function getMongoDB(): IRDatabase {
       isIniting = true;
 
       mongoose
-        .connect(
-          `mongodb://${Config.get('Mongod.host')}:${Config.get(
-            'Mongod.port',
-          )}/${Config.get('Mongod.database')}`,
-          {
-            useNewUrlParser: true,
-            autoIndex: false,
-            useUnifiedTopology: true,
-            keepAlive: true,
-          },
-        )
+        .connect(`mongodb://${opt.host}:${opt.port}/${opt.database}`, {
+          useNewUrlParser: true,
+          autoIndex: false,
+          useUnifiedTopology: true,
+          keepAlive: true,
+        })
         .catch((reason: any) => {
           // 初始化连接错误
           SLogger.error(new Error(reason));
           isIniting = false;
+
+          if (typeof callback === 'function') {
+            callback(new Error(reason));
+          }
         });
 
       // 禁用bufferCommands
@@ -50,7 +77,14 @@ export function getMongoDB(): IRDatabase {
         isInited = true;
         isIniting = true;
         // we're connected!
-        SLogger.info('mongo 连接成功');
+        SLogger.info(`mongo 连接${opt.database}成功`);
+
+        // 注册一些默认的modal
+        defineDefaultModals();
+
+        if (typeof callback === 'function') {
+          callback(undefined);
+        }
       });
     },
 
@@ -58,8 +92,13 @@ export function getMongoDB(): IRDatabase {
       mongoose.disconnect();
     },
 
-    getModel(name: string, protoProps: Object, classProps: Object): IRModel {
-      return getMongoDBModel(name, protoProps, classProps);
+    getModel(
+      name: string,
+      protoProps: Object = {},
+      classProps: Object = {},
+      schemaProps: ISchemaProps = { definition: {} },
+    ): IRModel {
+      return getMongoDBModel(name, protoProps, classProps, schemaProps);
     },
   };
 }

@@ -1,12 +1,7 @@
 import { SLogger } from '@sutils/logger';
-import { TagModal } from '@server/database';
 import { Router, Request, Response } from 'express';
-import { Serializer } from 'jsonapi-serializer';
-
-// 让数据符合JSON:API格式
-const TagsSerializer = new Serializer('tags', {
-  attributes: ['name', 'groupName'],
-});
+import { getDBModel } from '@server/database/db-factory';
+import { tagSerializer } from '@server/serializers';
 
 /**
  * 定义获取tags的接口
@@ -19,8 +14,10 @@ export function makeGetTagsRouter(router: Router): Router {
   return router.get('/', async function getTags(req: Request, res: Response) {
     SLogger.debug('query', req.query);
     // 查询所有的tags
-    let result = await TagModal.find();
+    let model = getDBModel('tags');
+    let result = await model.find();
     SLogger.debug('result', result);
-    res.json(TagsSerializer.serialize(result));
+
+    res.json(tagSerializer(result.map((item) => item.toJSON())));
   });
 }

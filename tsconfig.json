@@ -17,6 +17,8 @@
     "jsx": "react",
     "baseUrl": ".",
     "paths": {
+      "@root/*": ["./*"],
+
       "@svendros/*": ["src/server/vendors/*"],
       "@sutils/*": ["src/server/utils/*"],
       "@server/*": ["src/server/*"],

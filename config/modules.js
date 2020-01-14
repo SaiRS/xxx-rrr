@@ -73,6 +73,8 @@ function getWebpackAliases(options = {}) {
   if (path.relative(paths.appPath, baseUrlResolved) === '') {
     return {
       src: paths.appSrc,
+      '@root': path.resolve(__dirname, '..'),
+
       // 自定义alias
       '@svendors': path.resolve(__dirname, '..', 'src', 'server', 'vendors'),
       '@sutils': path.resolve(__dirname, '..', 'src', 'server', 'utils'),

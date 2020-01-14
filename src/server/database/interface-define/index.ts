@@ -7,7 +7,7 @@ export interface ISchemaProps {
 }
 
 export interface IRDatabase {
-  init(opt: Record<string, any>, callback?: IRDataBaseInitCallbackFunc): void;
+  init(opt?: Record<string, any>, callback?: IRDataBaseInitCallbackFunc): void;
   destory(): void;
 
   /**
@@ -74,6 +74,7 @@ export interface IRDocument {
   // 查
   get<ValueT = any>(key: string): ValueT;
   toJSON(): Object;
+  toJSONWithoutId(): Object;
 
   /**************** 改 ***********************/
   save(attr?: Record<string, any>): Promise<IRDocument>;

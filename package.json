@@ -40,6 +40,7 @@
     "express": "^5.0.0-alpha.7",
     "express-request-id": "^1.4.1",
     "file-loader": "3.0.1",
+    "firebase-admin": "^8.9.0",
     "formik": "^2.0.8",
     "fs-extra": "7.0.1",
     "glob": "^7.1.6",
@@ -54,7 +55,6 @@
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
     "jsonapi-serializer": "^3.6.5",
-    "leancloud-storage": "^4.0.0",
     "lodash": "^4.17.15",
     "logrocket": "^1.0.4",
     "mini-css-extract-plugin": "0.8.0",
@@ -99,9 +99,9 @@
     "start": "DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "test:server": "nodemon --exec 'mocha -R min -r ts-node/register -r tsconfig-paths/register'",
+    "test:server": "node scripts/test.js src/server --env='node'",
     "start:server": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
-    "start:server:watch": "nodemon --inspect"
+    "start:server:watch": "nodemon --inspect "
   },
   "eslintConfig": {
     "extends": [
@@ -225,7 +225,16 @@
     "modulePaths": [],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
+      "^.+\\.(css|sass|scss)$": "identity-obj-proxy",
+      "@root/(.*)": "<rootDir>/$1",
+      "@svendors/(.*)": "<rootDir>/src/server/vendors/$1",
+      "@sutils/(.*)": "<rootDir>/src/server/utils/$1",
+      "@server/(.*)": "<rootDir>/src/server/$1",
+      "@cutils/(.*)": "<rootDir>/src/client/utils/$1",
+      "@cutils": "<rootDir>/src/client/utils/index.ts",
+      "@cvendors/(.*)": "<rootDir>/src/client/vendors/$1",
+      "@client/(.*)": "<rootDir>/src/client/$1"
     },
     "moduleFileExtensions": [
       "web.js",

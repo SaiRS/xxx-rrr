@@ -5,17 +5,72 @@ import { tagsQueryRequest } from '@cutils/request/rrr';
 import { CLogger } from '@cutils';
 import classNames from 'classnames';
 
-import { Table, Modal, Button, Form } from 'react-bootstrap';
+import { Modal, Form, Tree, Input, Button } from 'antd';
 
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { tagsAddRequest } from '@cutils/request/rrr/tags/tags-add';
-import { ITag } from 'src/types';
+import { ITag, getDisplayName, getDemensionPath } from '@root/src/types';
+import { ITreeNode, generateTreeNode } from '@root/src/types/rrr/tree-node';
 
 const schema = yup.object({
   name: yup.string().required(),
-  groupName: yup.string().required(),
+  color: yup.string(),
 });
+
+function convertTagListToTagNodes(tags: ITag[]): ITreeNode<ITag | null>[] {
+  let dirMap: { [key: string]: ITreeNode<ITag | null> } = {};
+
+  let result: ITreeNode<ITag | null>[] = [];
+  for (let tag of tags) {
+    // 路径
+    let demension = getDemensionPath(tag);
+
+    // 名字
+    let name = getDisplayName(tag);
+
+    if (!demension) {
+      let node = generateTreeNode(name, tag);
+      result.push(node);
+    } else {
+      let node = generateTreeNode(name, tag);
+
+      let demensionSegments = demension.split('/');
+
+      let index = 0;
+      let parent = null;
+      while (index < demension.length) {
+        let path = demensionSegments.slice(0, index + 1).join('/');
+
+        let parentNode = dirMap[path];
+        if (parentNode) {
+          if (index === demension.length - 1) {
+            parentNode.children.push(node);
+          }
+
+          parent = parentNode;
+        } else {
+          let ppNode = generateTreeNode(path, null);
+          if (index === demension.length - 1) {
+            ppNode.children.push(node);
+          }
+
+          dirMap[path] = ppNode;
+          // // 没有找到
+          if (!parent) {
+            result.push(ppNode);
+          }
+
+          parent = ppNode;
+        }
+
+        index++;
+      }
+    }
+  }
+
+  return result;
+}
 
 export default function TagsSettingPage(
   props: RouteComponentProps,
@@ -24,12 +79,13 @@ export default function TagsSettingPage(
   const [showCreateModel, setShowCreateModel] = React.useState<boolean>(false);
   const container = React.useRef<HTMLDivElement>(document.createElement('div'));
 
+  const [tagNodes, setTagNodes] = React.useState<ITreeNode<ITag>[]>([]);
+
   React.useEffect(() => {
     let domContainer = container.current;
     document.body.appendChild(domContainer);
 
     return () => {
-      console.log('-----------======------');
       domContainer.remove();
     };
   }, []);
@@ -43,6 +99,11 @@ export default function TagsSettingPage(
         CLogger.error(error);
       });
   }, []);
+
+  React.useEffect(() => {
+    // 构造树状结构数据
+    setTagNodes(convertTagListToTagNodes(tags));
+  }, [tags]);
 
   function onNew() {
     setShowCreateModel(true);
@@ -73,86 +134,48 @@ export default function TagsSettingPage(
       >
         新增
       </button>
-      <Table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>名字</th>
-            <th>维度</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tags.map((tag: ITag, index: number) => {
-            return (
-              <tr key={tag.id}>
-                <td>{index}</td>
-                <td>{tag.name}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+      <Tree defaultExpandAll={true}>
+        {tagNodes.map((node: ITreeNode<ITag>) => {
+          return (
+            <Tree.TreeNode key={node.uuid} title={getDisplayName(node.value)}>
+              <div style={{ backgroundColor: node.value.color }}></div>
+            </Tree.TreeNode>
+          );
+        })}
+      </Tree>
       {ReactDOM.createPortal(
-        <Modal show={showCreateModel} onHide={onHandleClose}>
-          <Modal.Header closeButton>
-            <Modal.Title>新增标签</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Formik
-              validationSchema={schema}
-              onSubmit={onHandleOk}
-              initialValues={{
-                name: '',
-                groupName: '输入输出',
-              }}
-            >
-              {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                values,
-                touched,
-                isValid,
-                errors,
-              }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="formBasicEmail">
-                    <Form.Label>名字</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="name"
-                      placeholder="标签名字"
-                      value={values.name}
-                      onChange={handleChange}
-                      isValid={touched.name && !errors.name}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {errors.name}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-
-                  <Form.Group controlId="formBasicPassword">
-                    <Form.Label>维度</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="groupName"
-                      onChange={handleChange}
-                      value={values.groupName}
-                      isInvalid={!!errors.groupName}
-                    >
-                      <option>输入输出</option>
-                      <option>目的</option>
-                      <option>做事步骤</option>
-                      <option>计划</option>
-                    </Form.Control>
-                  </Form.Group>
-                  <Button variant="primary" type="submit">
-                    确定
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          </Modal.Body>
+        <Modal
+          visible={showCreateModel}
+          onCancel={onHandleClose}
+          title={'新增标签'}
+        >
+          <Formik
+            validationSchema={schema}
+            onSubmit={onHandleOk}
+            initialValues={{
+              name: '',
+              groupName: '输入输出',
+            }}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              isValid,
+              errors,
+            }) => (
+              <Form onSubmit={handleSubmit}>
+                <Form.Item label="标签名字">
+                  <Input></Input>
+                </Form.Item>
+                <Button type="primary" htmlType="submit">
+                  确定
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </Modal>,
         container.current,
       )}

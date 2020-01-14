@@ -1,7 +1,7 @@
 import { SLogger } from '@sutils/logger';
 import { Router, Request, Response } from 'express';
 import { getDBModel } from '@server/database/db-factory';
-import { tagSerializer } from '@server/serializers';
+import { tagSerializer } from '@sutils/serializer';
 
 /**
  * 定义获取tags的接口

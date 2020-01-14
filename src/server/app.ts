@@ -1,4 +1,3 @@
-import { SLogger } from '@sutils/logger';
 import createError from 'http-errors';
 import express, { NextFunction, Response, Request } from 'express';
 import path from 'path';
@@ -9,7 +8,10 @@ import addRequestId from 'express-request-id';
 import { routers } from './routes';
 import logger from 'morgan';
 
+import { SLogger } from '@sutils/logger';
+
 import { enableSwaggerDocServer } from './docs';
+import { errorSerializer } from '@sutils/serializer';
 
 const app: express.Express = express();
 
@@ -45,7 +47,7 @@ app.use(function(req, res: Response, next: NextFunction) {
 
 // error handler
 app.use(function errorMiddleware(
-  err: { message: any; status: any },
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction,
@@ -54,8 +56,12 @@ app.use(function errorMiddleware(
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  let error = errorSerializer(err);
+  SLogger.error(err, error);
+
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  // @ts-ignore
+  res.status(err.code || 500);
+  res.json(error);
 });
 export { app };

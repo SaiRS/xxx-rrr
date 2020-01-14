@@ -1,6 +1,6 @@
 import React from 'react';
 import LogRocket from 'logrocket';
-import AV from 'leancloud-storage';
+
 import ModuleStyles from './App.module.scss';
 import classNames from 'classnames';
 import { CLogger } from '@cutils';
@@ -12,25 +12,24 @@ import { MdTimer } from 'react-icons/md';
 import { IoMdSettings } from 'react-icons/io';
 
 import '@client/assets/styles/index.scss';
-// import { Button, Container, Row, Col } from 'react-bootstrap';
 import { AnalysisEntry } from './pages/analysis';
 import { PlanEntry } from './pages/plan';
 import { TimerEntry } from './pages/timer';
 import SettingEntry from './pages/setting/setting-entry';
+import {
+  // getHierarchyProjects,
+  // getListProjects,
+  getProjectDetail,
+  getListTasks,
+  getTaskDetail,
+} from '@cutils/request/rrr/timing';
 
 const App: React.FC = () => {
   const signOutRef = React.useRef<HTMLButtonElement>(null);
   const authRef = React.useRef<HTMLButtonElement>(null);
   const preRef = React.useRef<HTMLPreElement>(null);
 
-  React.useEffect(() => {
-    // 初始化leancloud
-    AV.init({
-      appId: process.env.REACT_APP_LEAN_CLOUD_APP_ID || '',
-      appKey: process.env.REACT_APP_LEAN_CLOUD_APP_KEY || '',
-      serverURLs: process.env.REACT_APP_LEAN_CLOUD_APP_REST_API || '',
-    });
-  });
+  React.useEffect(() => {});
 
   React.useEffect(() => {
     // TODO: 初始化logrocket
@@ -150,6 +149,16 @@ const App: React.FC = () => {
   //     });
   // }
 
+  // React.useEffect(() => {
+  //   getTaskDetail('1495493066593591355')
+  //     .then((result) => {
+  //       CLogger.info(result);
+  //     })
+  //     .catch((error: Error) => {
+  //       CLogger.error(error);
+  //     });
+  // }, []);
+
   return (
     <div className="flex w-full h-full bg-gray-100">
       <BrowserRouter>
@@ -168,12 +177,12 @@ const App: React.FC = () => {
             </Link>
             <Link to="/plan" className="flex flex items-center p-2">
               <GoTasklist className="w-6 h-6 hover:text-blue-600"></GoTasklist>
-              <span>计划</span>
+              <span>活动</span>
             </Link>
-            <Link to="/timer" className="flex flex items-center p-2">
+            {/* <Link to="/timer" className="flex flex items-center p-2">
               <MdTimer className="w-6 h-6 hover:text-blue-600"></MdTimer>
               <span>番茄钟</span>
-            </Link>
+            </Link> */}
             <Link to="/setting" className="flex flex items-center p-2">
               <IoMdSettings className="w-6 h-6 hover:text-blue-600"></IoMdSettings>
               <span>设置</span>
@@ -185,26 +194,10 @@ const App: React.FC = () => {
         <Switch>
           <Route path="/analysis" component={AnalysisEntry}></Route>
           <Route path="/plan" component={PlanEntry}></Route>
-          <Route path="/timer" component={TimerEntry}></Route>
+          {/* <Route path="/timer" component={TimerEntry}></Route> */}
           <Route path="/setting" component={SettingEntry}></Route>
           <Redirect to="/analysis"></Redirect>
         </Switch>
-
-        {/* footer */}
-        <div className="flex fixed bottom-0 w-full p-3 border-solid border-t sm:hidden">
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <DiGoogleAnalytics className="w-6 h-6 hover:text-blue-600"></DiGoogleAnalytics>
-            <span>分析</span>
-          </div>
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <GoTasklist className="w-6 h-6 hover:text-blue-600"></GoTasklist>
-            <span>计划</span>
-          </div>
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <MdTimer className="w-6 h-6 hover:text-blue-600"></MdTimer>
-            <span>番茄钟</span>
-          </div>
-        </div>
       </BrowserRouter>
     </div>
 

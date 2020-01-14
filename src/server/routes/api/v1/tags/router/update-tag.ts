@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { getDBModel } from '@server/database/db-factory';
 
 import { SLogger } from '@sutils/logger';
-import { errorSerializer } from '@server/serializers';
+import { errorSerializer } from '@sutils/serializer';
+import { Serializer } from 'jsonapi-serializer';
 
 // 让数据符合JSON:API格式
 const TagsSerializer = new Serializer('tags', { attributes: ['name'] });

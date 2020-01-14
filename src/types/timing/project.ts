@@ -1,1 +1,3 @@
-export interface IFTimingProject {}
+export interface IFTimingProject {
+  id: string;
+}

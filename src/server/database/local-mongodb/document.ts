@@ -7,6 +7,9 @@ export class MongoDocument implements IRDocument {
   fromJSON(rawJSON: Record<string, any>): this {
     const keys = Object.keys(rawJSON);
     for (let key of keys) {
+      if (key === 'id') {
+        key = '_id';
+      }
       this.set(key, rawJSON[key]);
     }
     return this;
@@ -20,23 +23,24 @@ export class MongoDocument implements IRDocument {
     }
 
     // eslint-disable-next-line compat/compat
-    // return new Proxy(this, {
-    //   set(
-    //     target: MongoDocument,
-    //     key: string,
-    //     value: any,
-    //     receiver: any,
-    //   ): boolean {
-    //     // 完成MongoDB数据存储实现之后再做修改
-    //     // 希望能够做到
-    //     // document.prop = 'ss'; // 将赋值转换为set('prop', 'ss);
-    //     // eslint-disable-next-line compat/compat
-    //     Reflect.set(target, key, value, receiver);
+    return new Proxy(this, {
+      set(
+        target: MongoDocument,
+        key: string,
+        value: any,
+        receiver: any,
+      ): boolean {
+        // 完成MongoDB数据存储实现之后再做修改
+        // 希望能够做到
+        // document.prop = 'ss'; // 将赋值转换为set('prop', 'ss);
+        // eslint-disable-next-line compat/compat
+        target.set(key, value);
+        // Reflect.set(target, key, value, receiver);
 
-    //     // 严格模式下需要返回true
-    //     return true;
-    //   },
-    // });
+        // 严格模式下需要返回true
+        return true;
+      },
+    });
   }
 
   get id(): string {
@@ -53,12 +57,35 @@ export class MongoDocument implements IRDocument {
     return this.doc.get(key);
   }
   toJSON(): Record<string, any> {
-    return this.doc.toJSON();
+    return this.doc.toJSON({
+      transform: function transform(doc: any, ret: any, options: any) {
+        // 将_id变成id
+        ret['id'] = ret['_id'];
+        // eslint-disable-next-line compat/compat
+        Reflect.deleteProperty(ret, '_id');
+
+        return ret;
+      },
+    });
+  }
+
+  toJSONWithoutId(): Record<string, any> {
+    return this.doc.toJSON({
+      transform: function transform(doc: any, ret: any, options: any) {
+        // eslint-disable-next-line compat/compat
+        Reflect.deleteProperty(ret, '_id');
+        return ret;
+      },
+    });
   }
 
   /****************** 改 *****************/
 
   set(key: string, value: any): this {
+    if (key === 'id') {
+      key = '_id';
+    }
+
     this.doc.set(key, value);
     return this;
   }
@@ -68,6 +95,7 @@ export class MongoDocument implements IRDocument {
     if (attr) {
       this.fromJSON(attr);
     }
+
     return this.doc.save().then((newDoc: mongoose.Document) => {
       this.doc = newDoc;
       return this;

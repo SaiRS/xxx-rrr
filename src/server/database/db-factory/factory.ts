@@ -1,5 +1,5 @@
 import { IRDatabase, IRModel } from '../interface-define';
-import { getLeanCloundDB } from '../leancloud/db';
+import { getMongoDB } from '../local-mongodb/db';
 
 /**
  * 获取database的实例
@@ -13,10 +13,15 @@ import { getLeanCloundDB } from '../leancloud/db';
  * @export
  */
 export function getDBInstance(): IRDatabase {
-  return getLeanCloundDB();
+  return getMongoDB();
 }
 
 export function getDBModel(name: string): IRModel {
   let db = getDBInstance();
-  return db.getModel(name, {}, {}, {});
+  return db.getModel(name, {}, {}, { definition: {} });
+}
+
+// 业务层使用的
+export function getTagsModal(): IRModel {
+  return getDBModel('tags');
 }

@@ -1,5 +1,4 @@
 import { IRDatabase, IRModel } from '../interface-define';
-import { getLeanCloundDB } from '../leancloud/db';
 import { getMongoDB } from '../local-mongodb/db';
 import { ComposedModel } from './model';
 
@@ -33,5 +32,5 @@ class ComposedDB implements IRDatabase {
 }
 
 export function getComposedDBInstance() {
-  return new ComposedDB(getLeanCloundDB(), getMongoDB());
+  return new ComposedDB(getMongoDB());
 }

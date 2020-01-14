@@ -4,7 +4,7 @@ import * as yup from 'yup';
 import { SLogger } from '@sutils/logger';
 
 import { getDBModel } from '@server/database/db-factory';
-import { tagSerializer, errorSerializer } from '@server/serializers';
+import { tagSerializer, errorSerializer } from '@sutils/serializer';
 
 const CreateTagSchema = yup.object({
   name: yup.string().required(),

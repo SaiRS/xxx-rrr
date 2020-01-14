@@ -88,7 +88,7 @@ class MongoDBModel implements IRModel {
   /******************** 增 *************************/
 
   createDocument(attribues?: Record<string, any>): MongoDocument {
-    let doc = new this.model();
+    let doc: mongoose.Document = new this.model();
     return new MongoDocument(doc, attribues);
   }
 

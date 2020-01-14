@@ -6,8 +6,8 @@ export class ComposedDocument implements IRDocument {
     this.docs = docs;
   }
 
-  get id(): string | undefined {
-    return this.docs[0].id;
+  get id(): string {
+    return this.docs[0].id || '';
   }
 
   equals(doc: IRDocument): boolean {
@@ -21,6 +21,10 @@ export class ComposedDocument implements IRDocument {
 
   toJSON(): Object {
     return this.docs[0].toJSON();
+  }
+
+  toJSONWithoutId(): Object {
+    return this.docs[0].toJSONWithoutId();
   }
 
   save(attr?: Record<string, any>): Promise<IRDocument> {

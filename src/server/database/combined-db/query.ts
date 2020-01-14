@@ -1,5 +1,7 @@
 import { IRQuery, IRDocument } from '../interface-define';
 
+// TODO: ComposedQuery
+// @ts-ignore
 export class ComposedQuery implements IRQuery {
   queries: IRQuery[];
   constructor(queries: IRQuery[]) {
@@ -221,7 +223,7 @@ export class ComposedQuery implements IRQuery {
     // eslint-disable-next-line compat/compat
     let allPromise = [];
     for (let i = 0; i < this.queries.length; i++) {
-      allPromise.push(this.queries[i].updateOne());
+      allPromise.push(this.queries[i].updateOne(criteria));
     }
 
     // eslint-disable-next-line compat/compat

@@ -2,6 +2,8 @@ import { ComposedQuery } from './query';
 import { IRModel, IRQuery, IRDocument } from '../interface-define';
 import { ComposedDocument } from './document';
 
+// TODO: ComposedModel
+// @ts-ignore
 export class ComposedModel implements IRModel {
   models: IRModel[];
   constructor(...models: IRModel[]) {
@@ -23,6 +25,8 @@ export class ComposedModel implements IRModel {
       allQueries.push(this.models[i].createQuery());
     }
 
+    // TODO: ComposedQuery
+    // @ts-ignore
     return new ComposedQuery(allQueries);
   }
 

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { getDBModel } from '@server/database/db-factory';
 import { IRDocument } from '@server/database/interface-define';
-import { tagSerializer } from '@server/serializers';
+import { tagSerializer } from '@sutils/serializer';
 
 export function makeDeleteTagsRouter(router: Router): Router {
   router.delete('/:tagId', async function deleteTags(

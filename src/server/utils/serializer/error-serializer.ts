@@ -8,7 +8,7 @@ import { Error as JSONAPIError, SerializerOptions } from 'jsonapi-serializer';
  * @param {IErrorSerializeOption} [opt={}] 选项
  * @returns
  */
-export function errorSerializer(error: Error, opt?: SerializerOptions = {}) {
+export function errorSerializer(error: Error, opt: SerializerOptions = {}) {
   return new JSONAPIError({
     id: uuid(),
     status: '',

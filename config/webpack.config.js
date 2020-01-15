@@ -28,8 +28,6 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 const PurgecssPlugin = require('purgecss-webpack-plugin');
 const glob = require('glob');
 
-console.log(...glob.sync(`${paths.appSrc}`));
-
 const postcssNormalize = require('postcss-normalize');
 
 const appPackageJson = require(paths.appPackageJson);

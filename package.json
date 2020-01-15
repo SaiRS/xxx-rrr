@@ -19,7 +19,6 @@
     "babel-loader": "8.0.6",
     "babel-plugin-named-asset-import": "^0.3.4",
     "babel-preset-react-app": "^9.0.2",
-    "bcrypt": "^3.0.7",
     "bunyan": "^1.8.12",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
@@ -36,7 +35,6 @@
     "eslint-plugin-import": "2.18.2",
     "eslint-plugin-jsx-a11y": "6.2.3",
     "eslint-plugin-react": "7.14.3",
-    "eslint-plugin-react-hooks": "^1.6.1",
     "express": "^5.0.0-alpha.7",
     "express-request-id": "^1.4.1",
     "file-loader": "3.0.1",
@@ -95,11 +93,11 @@
     "yup": "^0.27.0"
   },
   "scripts": {
-    "start": "DEBUG=app:* node scripts/start.js",
+    "start": "cross-env DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "test:server": "node scripts/test.js src/server --env='node'",
-    "start:server": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
+    "start:server": "cross-env DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
     "start:server:watch": "nodemon --inspect "
   },
   "eslintConfig": {
@@ -127,7 +125,6 @@
     "@babel/runtime": "^7.7.4",
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
-    "@types/bcrypt": "^3.0.0",
     "@types/bunyan": "^1.8.6",
     "@types/chai": "^4.2.7",
     "@types/classnames": "^2.2.9",
@@ -157,6 +154,7 @@
     "babel-plugin-import": "^1.13.0",
     "chai": "^4.2.0",
     "cookie-parser": "^1.4.4",
+    "cross-env": "^6.0.3",
     "debug": "^4.1.1",
     "eslint-config-prettier": "^6.1.0",
     "eslint-friendly-formatter": "^4.0.1",
@@ -251,20 +249,6 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      [
-        "import",
-        {
-         "libraryName": "antd",
-         "style": true
-        }
-      ]
     ]
   },
   "nodemonConfig": {

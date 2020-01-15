@@ -11,67 +11,13 @@ import { Modal, Form, Tree, Input, Button } from 'antd';
 import { Formik, useFormik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import { tagsAddRequest } from '@cutils/request/rrr/tags/tags-add';
-import { ITag, getDisplayName, getDemensionPath } from '@root/src/types';
-import { ITreeNode, generateTreeNode } from '@root/src/types/rrr/tree-node';
+import { ITag, convertTagListToTagNodes } from '@root/src/types';
+import { ITreeNode } from '@root/src/types/rrr/tree-node';
 
 const schema = yup.object({
   name: yup.string().required(),
   color: yup.string(),
 });
-
-function convertTagListToTagNodes(tags: ITag[]): ITreeNode<ITag | null>[] {
-  let dirMap: { [key: string]: ITreeNode<ITag | null> } = {};
-
-  let result: ITreeNode<ITag | null>[] = [];
-  for (let tag of tags) {
-    // 路径
-    let demension = getDemensionPath(tag);
-
-    // 名字
-    let name = getDisplayName(tag);
-
-    if (!demension) {
-      let node = generateTreeNode(name, tag);
-      result.push(node);
-    } else {
-      let node = generateTreeNode(name, tag);
-
-      let demensionSegments = demension.split('/');
-
-      let index = 0;
-      let parent = null;
-      while (index < demension.length) {
-        let path = demensionSegments.slice(0, index + 1).join('/');
-
-        let parentNode = dirMap[path];
-        if (parentNode) {
-          if (index === demension.length - 1) {
-            parentNode.children.push(node);
-          }
-
-          parent = parentNode;
-        } else {
-          let ppNode = generateTreeNode(path, null);
-          if (index === demension.length - 1) {
-            ppNode.children.push(node);
-          }
-
-          dirMap[path] = ppNode;
-          // // 没有找到
-          if (!parent) {
-            result.push(ppNode);
-          }
-
-          parent = ppNode;
-        }
-
-        index++;
-      }
-    }
-  }
-
-  return result;
-}
 
 export default function TagsSettingPage(
   props: RouteComponentProps,
@@ -95,6 +41,7 @@ export default function TagsSettingPage(
     tagsQueryRequest()
       .then((result) => {
         CLogger.info(result);
+        setTags(result);
       })
       .catch((error: Error) => {
         CLogger.error(error);
@@ -125,6 +72,14 @@ export default function TagsSettingPage(
       });
   }
 
+  function displayNode(node: ITreeNode<ITag | null>) {
+    return (
+      <Tree.TreeNode key={node.uuid} title={node.name}>
+        {node.children.map(displayNode)}
+      </Tree.TreeNode>
+    );
+  }
+
   return (
     <div className={classNames('w-full h-full')}>
       <button
@@ -137,11 +92,7 @@ export default function TagsSettingPage(
       </button>
       <Tree defaultExpandAll={true}>
         {tagNodes.map((node: ITreeNode<ITag | null>) => {
-          return (
-            <Tree.TreeNode key={node.uuid} title={node.name}>
-              {/* <div style={{ backgroundColor: node.value.color }}></div> */}
-            </Tree.TreeNode>
-          );
+          return displayNode(node);
         })}
       </Tree>
       {ReactDOM.createPortal(

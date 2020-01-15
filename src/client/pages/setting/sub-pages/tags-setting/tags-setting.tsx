@@ -4,10 +4,11 @@ import { RouteComponentProps } from 'react-router';
 import { tagsQueryRequest } from '@cutils/request/rrr';
 import { CLogger } from '@cutils';
 import classNames from 'classnames';
+import { SketchPicker } from 'react-color';
 
 import { Modal, Form, Tree, Input, Button } from 'antd';
 
-import { Formik } from 'formik';
+import { Formik, useFormik, FormikHelpers } from 'formik';
 import * as yup from 'yup';
 import { tagsAddRequest } from '@cutils/request/rrr/tags/tags-add';
 import { ITag, getDisplayName, getDemensionPath } from '@root/src/types';
@@ -79,7 +80,7 @@ export default function TagsSettingPage(
   const [showCreateModel, setShowCreateModel] = React.useState<boolean>(false);
   const container = React.useRef<HTMLDivElement>(document.createElement('div'));
 
-  const [tagNodes, setTagNodes] = React.useState<ITreeNode<ITag>[]>([]);
+  const [tagNodes, setTagNodes] = React.useState<ITreeNode<ITag | null>[]>([]);
 
   React.useEffect(() => {
     let domContainer = container.current;
@@ -113,7 +114,7 @@ export default function TagsSettingPage(
     setShowCreateModel(false);
   }
 
-  function onHandleOk(values: any) {
+  function onHandleOk(values: Omit<ITag, 'id'>) {
     console.log('----------', values);
     tagsAddRequest(values)
       .then((result) => {
@@ -135,10 +136,10 @@ export default function TagsSettingPage(
         新增
       </button>
       <Tree defaultExpandAll={true}>
-        {tagNodes.map((node: ITreeNode<ITag>) => {
+        {tagNodes.map((node: ITreeNode<ITag | null>) => {
           return (
-            <Tree.TreeNode key={node.uuid} title={getDisplayName(node.value)}>
-              <div style={{ backgroundColor: node.value.color }}></div>
+            <Tree.TreeNode key={node.uuid} title={node.name}>
+              {/* <div style={{ backgroundColor: node.value.color }}></div> */}
             </Tree.TreeNode>
           );
         })}
@@ -154,7 +155,9 @@ export default function TagsSettingPage(
             onSubmit={onHandleOk}
             initialValues={{
               name: '',
-              groupName: '输入输出',
+              color: '#fff',
+              note: '',
+              description: '',
             }}
           >
             {({
@@ -165,14 +168,37 @@ export default function TagsSettingPage(
               touched,
               isValid,
               errors,
+              setFieldValue,
             }) => (
               <Form onSubmit={handleSubmit}>
                 <Form.Item label="标签名字">
-                  <Input></Input>
+                  <Input name="name" onChange={handleChange}></Input>
                 </Form.Item>
-                <Button type="primary" htmlType="submit">
-                  确定
-                </Button>
+                <Form.Item label="颜色">
+                  <Input
+                    name="color"
+                    style={{
+                      display: 'none',
+                    }}
+                  ></Input>
+                  <SketchPicker
+                    color={values['color']}
+                    onChange={(value) => {
+                      setFieldValue('color', value ? value.hex : '', true);
+                    }}
+                  />
+                </Form.Item>
+                <Form.Item label="说明">
+                  <Input name="description" onChange={handleChange}></Input>
+                </Form.Item>
+                <Form.Item label="备注">
+                  <Input name="note" onChange={handleChange}></Input>
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">
+                    确定
+                  </Button>
+                </Form.Item>
               </Form>
             )}
           </Formik>

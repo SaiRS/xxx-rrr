@@ -96,8 +96,8 @@
   "scripts": {
     "start": "cross-env DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "test:server": "node scripts/test.js src/server --env='node'",
+    "test": "DEBUG=app:* node scripts/test.js",
+    "test:server": "DEBUG=app:* node scripts/test.js src/server --env='node'",
     "start:server": "cross-env DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
     "start:server:watch": "nodemon --inspect "
   },
@@ -200,10 +200,6 @@
     "roots": [
       "<rootDir>/src"
     ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
     "setupFiles": [
       "react-app-polyfill/jsdom"
     ],
@@ -251,7 +247,20 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
-    ]
+    ],
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": -10
+      }
+    }
   },
   "nodemonConfig": {
     "exec": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",

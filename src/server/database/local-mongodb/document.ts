@@ -1,19 +1,9 @@
 import { IRDocument } from './../interface-define';
 import mongoose from 'mongoose';
+import { SLogger } from '@sutils/logger';
 
 export class MongoDocument implements IRDocument {
   doc: mongoose.Document;
-
-  fromJSON(rawJSON: Record<string, any>): this {
-    const keys = Object.keys(rawJSON);
-    for (let key of keys) {
-      if (key === 'id') {
-        key = '_id';
-      }
-      this.set(key, rawJSON[key]);
-    }
-    return this;
-  }
 
   constructor(doc: mongoose.Document, attributes?: Record<string, any>) {
     this.doc = doc;
@@ -30,6 +20,10 @@ export class MongoDocument implements IRDocument {
         value: any,
         receiver: any,
       ): boolean {
+        if (key === 'doc') {
+          // eslint-disable-next-line compat/compat
+          return Reflect.set(target, key, value, receiver);
+        }
         // 完成MongoDB数据存储实现之后再做修改
         // 希望能够做到
         // document.prop = 'ss'; // 将赋值转换为set('prop', 'ss);
@@ -56,6 +50,18 @@ export class MongoDocument implements IRDocument {
   get(key: string): any {
     return this.doc.get(key);
   }
+
+  fromJSON(rawJSON: Record<string, any>): this {
+    const keys = Object.keys(rawJSON);
+    for (let key of keys) {
+      if (key === 'id') {
+        key = '_id';
+      }
+      this.set(key, rawJSON[key]);
+    }
+    return this;
+  }
+
   toJSON(): Record<string, any> {
     return this.doc.toJSON({
       transform: function transform(doc: any, ret: any, options: any) {

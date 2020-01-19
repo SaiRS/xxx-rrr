@@ -134,8 +134,8 @@ class MongoDBModel implements IRModel {
 
   async insertMany(docs: IRDocument[]): Promise<IRDocument[]> {
     let resultDocs = docs.map((doc) => doc.toJSON());
-    let newDocs = await this.model.insertMany(resultDocs);
-    return newDocs.map((nDoc) => this.createDocument(nDoc));
+    let newDocs: mongoose.Document[] = await this.model.insertMany(resultDocs);
+    return newDocs.map((nDoc) => this.createDocument(nDoc.toJSON()));
   }
 
   async updateOne(

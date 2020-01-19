@@ -5,6 +5,7 @@ import { SLogger } from '@sutils/logger';
 
 import { getDBModel } from '@server/database/db-factory';
 import { tagSerializer, errorSerializer } from '@sutils/serializer';
+import { IRDocument } from '@server/database/interface-define';
 
 const CreateTagSchema = yup.object({
   name: yup.string().required(),
@@ -21,15 +22,16 @@ export function makeCreateTagRouter(router: Router): Router {
     // 从body中获取请求参数
     SLogger.debug(req.body);
 
-    CreateTagSchema.validate(req.body.params)
-      .then(async () => {
+    CreateTagSchema.validate(req.body)
+      .then(() => {
         // 保存数据库
         let model = getDBModel('tags');
-        let tagDoc = model.createDocument(req.body.params);
-        let result = await tagDoc.save();
+        let tagDoc = model.createDocument(req.body);
 
-        // TagsSerializer
-        res.json(tagSerializer(result.toJSON()));
+        tagDoc.save().then((result: IRDocument) => {
+          // TagsSerializer
+          res.json(tagSerializer(result.toJSON()));
+        });
       })
       .catch((error: Error) => {
         let serializedError = errorSerializer(error);

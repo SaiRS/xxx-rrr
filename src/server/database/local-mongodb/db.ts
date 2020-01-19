@@ -45,7 +45,9 @@ export function getMongoDB(): IRDatabase {
       }
 
       isIniting = true;
-
+      SLogger.debug(
+        `mongodb的连接参数 host=${opt.host}, port=${opt.port}, database=${opt.database}`,
+      );
       mongoose
         .connect(`mongodb://${opt.host}:${opt.port}/${opt.database}`, {
           useNewUrlParser: true,

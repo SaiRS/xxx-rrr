@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 
+export const defaultTagColor = '#92CFEE';
+export const defaultTagNote = '';
+export const defaultTagDescription = '';
+
 // tag schema的定义
 export const TagSchemaDefinition: mongoose.SchemaDefinition = {
   name: {
@@ -8,15 +12,15 @@ export const TagSchemaDefinition: mongoose.SchemaDefinition = {
   },
   color: {
     type: String,
-    default: '#92CFEE',
+    default: defaultTagColor,
   },
   note: {
     type: String,
-    default: '',
+    default: defaultTagNote,
   },
   description: {
     type: String,
-    default: '',
+    default: defaultTagDescription,
   },
 };
 

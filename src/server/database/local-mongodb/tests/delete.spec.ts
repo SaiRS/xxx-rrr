@@ -1,11 +1,8 @@
 import { getMongoDB } from '../db';
-import { IRDocument } from '@server/database/interface-define';
-import { SLogger } from '@sutils/logger';
-import {
-  defaultTagColor,
-  defaultTagNote,
-  defaultTagDescription,
-} from '../models';
+import { testDefaultTestModalCount } from '../models/test-modal';
+
+const modal = 'test-modal';
+const prefix = 'test-delete';
 
 beforeAll(async (done) => {
   let db = getMongoDB();
@@ -20,75 +17,104 @@ afterAll(() => {
 });
 
 describe('删除数据', () => {
-  const prefix = 'test';
-
   function getName(name: string) {
     return `${prefix}:${name}`;
   }
 
   beforeEach(async () => {
     let db = getMongoDB();
-    let tagsModal = db.getModel('tags');
+    let testModal = db.getModel(modal);
 
-    let tag1 = tagsModal.createDocument({
+    await testModal.deleteMany({ name: new RegExp(prefix) });
+
+    let tag1 = testModal.createDocument({
       name: getName('tag-1'),
+      order: 1,
     });
-    let tag2 = tagsModal.createDocument({
+    let tag2 = testModal.createDocument({
       name: getName('tag-2'),
-      color: '#000',
+      order: 2,
     });
-    let tag3 = tagsModal.createDocument({
+    let tag3 = testModal.createDocument({
       name: getName('tag-3'),
-      color: '#bbb',
       note: 'tag3-note',
       description: 'tag3-description',
+      count: testDefaultTestModalCount + 1,
+      order: 3,
+    });
+    let tag4 = testModal.createDocument({
+      name: getName('tag-demo'),
+      count: testDefaultTestModalCount + 1,
+      list: ['hello', 'world'],
+      order: 4,
+    });
+    let tag5 = testModal.createDocument({
+      name: getName('tag-demo'),
+      count: testDefaultTestModalCount - 1,
+      order: 5,
     });
 
-    await tagsModal.insertMany([tag1, tag2, tag3]);
+    await testModal.insertMany([tag1, tag2, tag3, tag4, tag5]);
   });
 
   afterEach(async () => {
     let db = getMongoDB();
-    let tagsModal = db.getModel('tags');
-    return tagsModal.deleteMany({ name: /test:/ });
-  });
+    let testModal = db.getModel(modal);
 
-  test('document.delete', async () => {
-    let db = getMongoDB();
-    let tagsModal = db.getModel('tags');
-
-    let tag = tagsModal.createDocument({
-      name: getName('tag-1'),
-    });
-
-    let result: IRDocument = await tag.save();
+    await testModal.deleteMany({ name: new RegExp(prefix) });
   });
 
   test('modal.deleteMany', async () => {
     let db = getMongoDB();
-    let tagsModal = db.getModel('tags');
+    let testModal = db.getModel(modal);
 
-    let tag1 = tagsModal.createDocument({
-      name: getName('tag-1'),
-    });
-    let tag2 = tagsModal.createDocument({
-      name: getName('tag-2'),
-      color: '#000',
-    });
-    let tag3 = tagsModal.createDocument({
-      name: getName('tag-3'),
-      color: '#bbb',
-      note: 'tag3-note',
-      description: 'tag3-description',
+    await testModal.deleteMany({
+      name: new RegExp(prefix),
     });
 
-    let results = await tagsModal.insertMany([tag1, tag2, tag3]);
+    // 查询
+    let result = await testModal.createQuery().count();
+    expect(result).toBe(0);
+  });
 
-    expect(results.length).toBe(3);
-    console.log(results[0].toJSON());
-    expect(results[0].get('name')).toEqual(getName('tag-1'));
-    expect(results[1].get('name')).toEqual(getName('tag-2'));
-    expect(results[2].get('name')).toEqual(getName('tag-3'));
-    expect(results[1].get('color')).toEqual('#000');
+  test('modal.deleteOne', async () => {
+    let db = getMongoDB();
+    let testModal = db.getModel(modal);
+
+    await testModal.deleteOne({
+      name: new RegExp(prefix),
+    });
+
+    // 查询
+    let result = await testModal.createQuery().count();
+    expect(result).toBe(4);
+  });
+
+  test('query.deleteOne', async () => {
+    let db = getMongoDB();
+    let testModal = db.getModel(modal);
+
+    await testModal
+      .createQuery()
+      .equalTo('name', new RegExp(prefix))
+      .deleteOne();
+
+    // 查询
+    let result = await testModal.createQuery().count();
+    expect(result).toBe(4);
+  });
+
+  test('query.delete', async () => {
+    let db = getMongoDB();
+    let testModal = db.getModel(modal);
+
+    await testModal
+      .createQuery()
+      .equalTo('name', new RegExp(prefix))
+      .delete();
+
+    // 查询
+    let result = await testModal.createQuery().count();
+    expect(result).toBe(0);
   });
 });

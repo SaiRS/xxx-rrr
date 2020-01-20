@@ -74,11 +74,11 @@ export class MongoQuery<T = any> implements IRQuery {
 
   // field
   exists(key: string): this {
-    this.query.exists(key);
+    this.query.exists(key, true);
     return this;
   }
   notExist(key: string): this {
-    this.query.ne(key);
+    this.query.exists(key, false);
     return this;
   }
 
@@ -108,7 +108,7 @@ export class MongoQuery<T = any> implements IRQuery {
   async find(criteria?: any): Promise<IRDocument[]> {
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
-      this.query.find(criteria, (error, res: any[]) => {
+      this.query.find(criteria, (error, res: mongoose.Document[]) => {
         if (!error) {
           let results: MongoDocument[] = [];
           for (let value of res) {
@@ -122,12 +122,16 @@ export class MongoQuery<T = any> implements IRQuery {
     });
   }
 
-  async findOne(criteria?: any): Promise<any | null> {
+  async findOne(criteria?: any): Promise<IRDocument | null> {
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
-      this.query.findOne(criteria, (error, res: any) => {
+      this.query.findOne(criteria, (error, res: mongoose.Document | null) => {
         if (!error) {
-          resolve(res);
+          if (res) {
+            resolve(new MongoDocument(res));
+          } else {
+            resolve(null);
+          }
         } else {
           reject(error);
         }
@@ -138,7 +142,7 @@ export class MongoQuery<T = any> implements IRQuery {
   async count(): Promise<number> {
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
-      this.query.count((err: Error, value: number) => {
+      this.query.countDocuments((err: Error, value: number) => {
         if (!err) {
           resolve(value);
         } else {
@@ -221,13 +225,12 @@ export class MongoQuery<T = any> implements IRQuery {
 
     return this;
   }
-  not(...queries: MongoQuery[]): this {
-    let orQueries = queries.map((qur) => qur.query.getQuery());
+  not(): this {
     let queryJson = this.query.getQuery();
 
     // 重置一次
     this.query.setQuery({});
-    this.query = this.query.nor([queryJson, ...orQueries]);
+    this.query = this.query.nor([queryJson]);
     return this;
   }
 }

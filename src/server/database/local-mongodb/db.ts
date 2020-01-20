@@ -10,8 +10,13 @@ import mongoose from 'mongoose';
 import Config from 'config';
 import { getMongoDBModel } from './model';
 import { TagSchemaDefinition } from './models';
+import { TestSchemaDefinition } from './models/test-modal';
 
 function defineDefaultModals() {
+  // 如果是测试环境
+  if (process.env.NODE_ENV === 'test') {
+    getMongoDBModel('test-modal', {}, {}, { definition: TestSchemaDefinition });
+  }
   // tags
   getMongoDBModel(
     'tags',
@@ -54,6 +59,7 @@ export function getMongoDB(): IRDatabase {
           autoIndex: false,
           useUnifiedTopology: true,
           keepAlive: true,
+          useFindAndModify: false, // findAndUpdateOne需要
         })
         .catch((reason: any) => {
           // 初始化连接错误

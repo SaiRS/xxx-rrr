@@ -1,6 +1,5 @@
 import { IRDocument } from './../interface-define';
 import mongoose from 'mongoose';
-import { SLogger } from '@sutils/logger';
 
 export class MongoDocument implements IRDocument {
   doc: mongoose.Document;
@@ -72,6 +71,7 @@ export class MongoDocument implements IRDocument {
 
         return ret;
       },
+      versionKey: false,
     });
   }
 
@@ -82,6 +82,7 @@ export class MongoDocument implements IRDocument {
         Reflect.deleteProperty(ret, '_id');
         return ret;
       },
+      versionKey: false,
     });
   }
 

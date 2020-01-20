@@ -22,6 +22,16 @@ export const TagSchemaDefinition: mongoose.SchemaDefinition = {
     type: String,
     default: defaultTagDescription,
   },
+
+  createdAt: {
+    type: Date,
+    default: new Date(),
+  },
+
+  updatedAt: {
+    type: Date,
+    default: new Date(),
+  },
 };
 
 // export const TagModal = mongoose.model('tags', TagSchema);

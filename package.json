@@ -96,8 +96,8 @@
   "scripts": {
     "start": "cross-env DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "DEBUG=app:* node scripts/test.js",
-    "test:server": "DEBUG=app:* node scripts/test.js src/server --env='node'",
+    "test": "cross-env DEBUG=app:* node scripts/test.js",
+    "test:server": "cross-env DEBUG=app:* node scripts/test.js src/server --env='node'",
     "start:server": "cross-env DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
     "start:server:watch": "nodemon --inspect "
   },

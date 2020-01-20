@@ -44,7 +44,7 @@ export interface IRModel {
   insertMany(docs: IRDocument[]): Promise<IRDocument[]>;
 
   deleteMany(conditions?: any): Promise<void>;
-  deleteOne(conditions?: any): Promise<null | IRDocument>;
+  deleteOne(conditions?: any): Promise<undefined | IRDocument>;
 
   updateOne(
     conditions?: any,

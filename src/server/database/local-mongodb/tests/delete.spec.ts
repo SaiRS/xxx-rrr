@@ -21,6 +21,10 @@ describe('删除数据', () => {
     return `${prefix}:${name}`;
   }
 
+  test('dddd', () => {
+    expect(1).toBe(1);
+  });
+
   beforeEach(async () => {
     let db = getMongoDB();
     let testModal = db.getModel(modal);
@@ -73,7 +77,10 @@ describe('删除数据', () => {
     });
 
     // 查询
-    let result = await testModal.createQuery().count();
+    let result = await testModal
+      .createQuery()
+      .equalTo('name', RegExp(prefix))
+      .count();
     expect(result).toBe(0);
   });
 
@@ -86,7 +93,10 @@ describe('删除数据', () => {
     });
 
     // 查询
-    let result = await testModal.createQuery().count();
+    let result = await testModal
+      .createQuery()
+      .equalTo('name', RegExp(prefix))
+      .count();
     expect(result).toBe(4);
   });
 
@@ -100,8 +110,12 @@ describe('删除数据', () => {
       .deleteOne();
 
     // 查询
-    let result = await testModal.createQuery().count();
+    let result = await testModal
+      .createQuery()
+      .equalTo('name', RegExp(prefix))
+      .count();
     expect(result).toBe(4);
+    expect(1).toBe(1);
   });
 
   test('query.delete', async () => {
@@ -114,7 +128,10 @@ describe('删除数据', () => {
       .delete();
 
     // 查询
-    let result = await testModal.createQuery().count();
+    let result = await testModal
+      .createQuery()
+      .equalTo('name', RegExp(prefix))
+      .count();
     expect(result).toBe(0);
   });
 });

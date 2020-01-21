@@ -44,7 +44,7 @@ let tag1JSON = {
 
 let tag2JSON = {
   name: getName('tag-2'),
-  color: '#000',
+  color: '#0c0',
   note: defaultTagNote,
   description: defaultTagDescription,
   count: testDefaultTestModalCount,
@@ -54,7 +54,7 @@ let tag2JSON = {
 
 let tag3JSON = {
   name: getName('tag-3'),
-  color: '#bbb',
+  color: '#bcb',
   note: 'tag3-note',
   description: 'tag3-description',
   count: testDefaultTestModalCount + 1,
@@ -64,7 +64,7 @@ let tag3JSON = {
 
 let tag4JSON = {
   name: getName('tag-demo'),
-  color: '#bbb',
+  color: '#bcb',
   note: defaultTagNote,
   description: defaultTagDescription,
   count: testDefaultTestModalCount + 1,
@@ -94,12 +94,12 @@ beforeEach(async () => {
   });
   let tag2 = testModal.createDocument({
     name: getName('tag-2'),
-    color: '#000',
+    color: '#0c0',
     order: 2,
   });
   let tag3 = testModal.createDocument({
     name: getName('tag-3'),
-    color: '#bbb',
+    color: '#bcb',
     note: 'tag3-note',
     description: 'tag3-description',
     count: testDefaultTestModalCount + 1,
@@ -107,7 +107,7 @@ beforeEach(async () => {
   });
   let tag4 = testModal.createDocument({
     name: getName('tag-demo'),
-    color: '#bbb',
+    color: '#bcb',
     count: testDefaultTestModalCount + 1,
     list: ['hello', 'world'],
     order: 4,
@@ -135,12 +135,13 @@ describe('modal查询数据', () => {
     let testModal = db.getModel(modal);
 
     let results = await testModal.find({
-      color: '#bbb',
+      color: '#bcb',
+      name: new RegExp(prefix),
     });
 
     expect(results.length).toEqual(2);
     expect(results[0].get('name')).toEqual(getName('tag-3'));
-    expect(results[0].get('color')).toEqual('#bbb');
+    expect(results[0].get('color')).toEqual('#bcb');
     expect(results[0].get('note')).toEqual('tag3-note');
     expect(results[0].get('description')).toEqual('tag3-description');
   });
@@ -228,7 +229,7 @@ describe('query查询数据', () => {
     expect(results.length).toBe(2);
     expect(results[0].get('name')).toBe(getName('tag-demo'));
     expect(results[1].get('name')).toBe(getName('tag-demo'));
-    expect(results[0].get('color')).toBe('#bbb');
+    expect(results[0].get('color')).toBe('#bcb');
     expect(results[1].get('color')).toBe('#000');
   });
 
@@ -251,6 +252,7 @@ describe('query查询数据', () => {
 
     let query = testModal.createQuery();
     let results = await query
+      .equalTo('name', new RegExp(prefix))
       .greatThanOrEqualTo('count', testDefaultTestModalCount)
       .find();
 
@@ -268,6 +270,7 @@ describe('query查询数据', () => {
 
     let query = testModal.createQuery();
     let results = await query
+      .equalTo('name', new RegExp(prefix))
       .greatThan('count', testDefaultTestModalCount)
       .find();
 
@@ -522,7 +525,7 @@ describe('query查询数据', () => {
     let db = getMongoDB();
     let testModal = db.getModel(modal);
 
-    let query = testModal.createQuery();
+    let query = testModal.createQuery().equalTo('name', new RegExp(prefix));
     let result = await query.skip(2).count();
     expect(result).toBe(3);
   });
@@ -552,19 +555,19 @@ describe('测试逻辑查询', () => {
     let testModal = db.getModel(modal);
 
     let query1 = testModal.createQuery();
-    query1.equalTo('color', '#000');
+    query1.equalTo('name', new RegExp(prefix)).equalTo('color', '#0c0');
 
     let query2 = testModal.createQuery();
-    query2.equalTo('color', defaultTagColor);
+    query2.equalTo('name', new RegExp(prefix)).equalTo('color', '#bcb');
 
     let query = query1.or(query2);
 
     let results = await query.ascending('order').find();
 
     expect(results.length).toBe(3);
-    expect(results[0].toJSONWithoutId()).toMatchObject(tag1JSON);
-    expect(results[1].toJSONWithoutId()).toMatchObject(tag2JSON);
-    expect(results[2].toJSONWithoutId()).toMatchObject(tag5JSON);
+    expect(results[0].toJSONWithoutId()).toMatchObject(tag2JSON);
+    expect(results[1].toJSONWithoutId()).toMatchObject(tag3JSON);
+    expect(results[2].toJSONWithoutId()).toMatchObject(tag4JSON);
   });
 
   test('not', async () => {
@@ -572,15 +575,16 @@ describe('测试逻辑查询', () => {
     let testModal = db.getModel(modal);
 
     let query1 = testModal.createQuery();
-    query1.equalTo('color', '#000');
+    query1.equalTo('name', new RegExp(prefix)).equalTo('color', '#0c0');
 
     let query = query1.not();
 
     let results = await query.ascending('order').find();
 
-    expect(results.length).toBe(3);
+    expect(results.length).toBe(4);
     expect(results[0].toJSONWithoutId()).toMatchObject(tag1JSON);
     expect(results[1].toJSONWithoutId()).toMatchObject(tag3JSON);
     expect(results[2].toJSONWithoutId()).toMatchObject(tag4JSON);
+    expect(results[3].toJSONWithoutId()).toMatchObject(tag5JSON);
   });
 });

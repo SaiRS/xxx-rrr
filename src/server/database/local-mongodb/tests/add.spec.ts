@@ -36,7 +36,7 @@ describe('新增数据', () => {
   afterEach(async () => {
     let db = getMongoDB();
     let testModal = db.getModel(modal);
-    return testModal.deleteMany({ name: new RegExp(prefix) });
+    await testModal.deleteMany({ name: new RegExp(prefix) });
   });
 
   test('default value: document.save', async () => {

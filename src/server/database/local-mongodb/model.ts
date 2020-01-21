@@ -121,15 +121,18 @@ class MongoDBModel implements IRModel {
     });
   }
 
-  async deleteOne(conditions?: any): Promise<IRDocument> {
-    return this.findOne(conditions).then((doc: IRDocument | null) => {
-      if (doc) {
-        return doc.delete();
-      } else {
-        // eslint-disable-next-line compat/compat
-        return Promise.reject(new Error('没有找到该对象'));
-      }
-    });
+  async deleteOne(conditions?: any): Promise<IRDocument | null> {
+    let doc: IRDocument | null = await this.findOne(conditions);
+    await this.model.deleteOne(conditions);
+    return doc;
+    // return this.findOne(conditions).then((doc: IRDocument | null) => {
+    //   if (doc) {
+    //     return doc.delete();
+    //   } else {
+    //     // eslint-disable-next-line compat/compat
+    //     return Promise.reject(new Error('没有找到该对象'));
+    //   }
+    // });
   }
 
   async insertMany(docs: IRDocument[]): Promise<IRDocument[]> {

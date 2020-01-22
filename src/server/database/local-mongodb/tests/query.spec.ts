@@ -555,10 +555,10 @@ describe('测试逻辑查询', () => {
     let testModal = db.getModel(modal);
 
     let query1 = testModal.createQuery();
-    query1.equalTo('name', new RegExp(prefix)).equalTo('color', '#0c0');
+    query1.equalTo('color', '#0c0');
 
     let query2 = testModal.createQuery();
-    query2.equalTo('name', new RegExp(prefix)).equalTo('color', '#bcb');
+    query2.equalTo('color', '#bcb');
 
     let query = query1.or(query2);
 

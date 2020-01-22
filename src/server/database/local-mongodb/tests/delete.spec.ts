@@ -134,4 +134,8 @@ describe('删除数据', () => {
       .count();
     expect(result).toBe(0);
   });
+
+  test('demo', () => {
+    expect(1).toBe(1);
+  });
 });

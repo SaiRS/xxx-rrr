@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { MongoDocument } from './document';
 
 export class MongoQuery<T = any> implements IRQuery {
-  query: mongoose.Query<T>;
+  query: mongoose.DocumentQuery<T, mongoose.Document>;
 
   constructor(query: mongoose.Query<T>) {
     this.query = query;
@@ -155,7 +155,8 @@ export class MongoQuery<T = any> implements IRQuery {
   delete(): Promise<void> {
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
-      this.query.remove((err: Error) => {
+      // NOTE: @types没有提供?
+      this.query.deleteMany((err: Error) => {
         if (!err) {
           resolve();
         } else {

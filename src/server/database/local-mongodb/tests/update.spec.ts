@@ -26,7 +26,7 @@ beforeEach(async () => {
   let testModal = db.getModel(modal);
 
   await testModal.deleteMany({ name: new RegExp(prefix) });
-  await testModal.deleteMany({ name: new RegExp(new_prefix) });
+  await testModal.deleteMany({ name: new_prefix });
 
   let tag1 = testModal.createDocument({
     name: getName('tag-1'),
@@ -67,7 +67,11 @@ afterEach(async () => {
   let testModal = db.getModel(modal);
 
   await testModal.deleteMany({ name: new RegExp(prefix) });
-  await testModal.deleteMany({ name: new RegExp(new_prefix) });
+  await testModal.deleteMany({ name: new_prefix });
+});
+
+test('demo', () => {
+  expect(1).toBe(1);
 });
 
 describe('更新数据', () => {

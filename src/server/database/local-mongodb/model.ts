@@ -3,6 +3,7 @@ import { IRModel, IRDocument } from '../interface-define';
 import mongoose from 'mongoose';
 import { MongoDocument } from './document';
 import { MongoQuery } from './query';
+import { SLogger } from '@sutils/logger';
 
 export function getMongoDBModel(
   name: string,

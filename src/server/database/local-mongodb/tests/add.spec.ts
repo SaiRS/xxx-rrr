@@ -5,7 +5,7 @@ import {
   defaultTagColor,
   defaultTagNote,
   defaultTagDescription,
-} from '../models';
+} from '@server/models';
 
 const prefix = 'test-add';
 const modal = 'test-modal';

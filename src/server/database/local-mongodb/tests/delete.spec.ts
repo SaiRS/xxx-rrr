@@ -1,5 +1,5 @@
 import { getMongoDB } from '../db';
-import { testDefaultTestModalCount } from '../models/test-modal';
+import { testDefaultTestModalCount } from '@server/models';
 
 const modal = 'test-modal';
 const prefix = 'test-delete';

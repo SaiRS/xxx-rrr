@@ -5,12 +5,12 @@ import {
   defaultTagColor,
   defaultTagNote,
   defaultTagDescription,
-} from '../models';
+} from '@server/models';
 import mongoose from 'mongoose';
 import {
   testDefaultTestModalCount,
   testDefaultTestModalListItem,
-} from '../models/test-modal';
+} from '@server/models';
 
 const prefix = 'test-query';
 const modal = 'test-modal';

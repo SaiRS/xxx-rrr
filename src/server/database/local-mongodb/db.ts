@@ -9,8 +9,7 @@ import { SLogger } from '@sutils/logger';
 import mongoose from 'mongoose';
 import Config from 'config';
 import { getMongoDBModel } from './model';
-import { TagSchemaDefinition } from './models';
-import { TestSchemaDefinition } from './models/test-modal';
+import { TagSchemaDefinition, TestSchemaDefinition } from '@server/models';
 
 function defineDefaultModals() {
   // 如果是测试环境

@@ -12,6 +12,7 @@ import { SLogger } from '@sutils/logger';
 
 import { enableSwaggerDocServer } from './docs';
 import { errorSerializer } from '@sutils/serializer';
+import { getDBInstance } from './database/db-factory';
 
 const app: express.Express = express();
 
@@ -36,6 +37,9 @@ for (let config of routers) {
 app.use('/', function(req, res) {
   res.send('hello');
 });
+
+// 数据库初始化
+getDBInstance().init();
 
 // swagger docs
 enableSwaggerDocServer(app);

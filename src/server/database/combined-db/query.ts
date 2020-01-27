@@ -203,7 +203,7 @@ export class ComposedQuery implements IRQuery {
     }
 
     // eslint-disable-next-line compat/compat
-    return Promise.all(allPromise).then((results: IRDocument[]) => {
+    return Promise.all(allPromise).then((results: any[]) => {
       return results[0];
     });
   }

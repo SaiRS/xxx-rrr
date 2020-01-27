@@ -156,6 +156,7 @@ export class MongoQuery<T = any> implements IRQuery {
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
       // NOTE: @types没有提供?
+      // @ts-ignore
       this.query.deleteMany((err: Error) => {
         if (!err) {
           resolve();

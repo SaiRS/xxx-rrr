@@ -13,4 +13,13 @@ interface Request {
 }
 ```
 
-5.
+5. type-graphl 是 node 模块，在 client 中使用不了，因为我们的 schema，type 又必须在 web 端用到它，怎么办
+   ```
+    webpack plugin 添加
+    ![参考文档](https://github.com/MichalLytek/type-graphql/blob/master/docs/browser-usage.md)
+
+        new webpack.NormalModuleReplacementPlugin(/type-graphql$/, resource => {
+      resource.request = resource.request.replace(/type-graphql/, "type-graphql/dist/browser-shim.js");
+    }),
+   ```
+6.

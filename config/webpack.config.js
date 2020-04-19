@@ -324,6 +324,15 @@ module.exports = function(webpackEnv) {
         // please link the files into your node_modules/ and let module-resolution kick in.
         // Make sure your source files are compiled, as they will not be processed in any way.
         new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+        // new webpack.NormalModuleReplacementPlugin(
+        //   /type-graphql$/,
+        //   (resource) => {
+        //     resource.request = resource.request.replace(
+        //       /type-graphql/,
+        //       'type-graphql/dist/browser-shim.js',
+        //     );
+        //   },
+        // ),
       ],
     },
     resolveLoader: {
@@ -670,6 +679,12 @@ module.exports = function(webpackEnv) {
         }),
       process.env.REACT_APP_WEBPACK_ANALYSIS === 'true' &&
         new BundleAnalyzerPlugin(),
+      new webpack.NormalModuleReplacementPlugin(/type-graphql$/, (resource) => {
+        resource.request = resource.request.replace(
+          /type-graphql/,
+          'type-graphql/dist/browser-shim.js',
+        );
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

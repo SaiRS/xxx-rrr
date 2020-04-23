@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { defaultTagColor, defaultTagNote, defaultTagDescription } from './tag';
-import { number } from 'yup';
+// import { number } from 'yup';
 
 export const testDefaultTestModalCount = 3;
 export const testDefaultTestModalListItem = 'demo';

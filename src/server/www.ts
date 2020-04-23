@@ -1,5 +1,6 @@
 #!/usr/bin/env ts-node
-
+// type-graphql的依赖
+import 'reflect-metadata';
 /**
  * Module dependencies.
  */
@@ -86,3 +87,5 @@ function onListening() {
     SLogger.info('Listening on ' + bind);
   }
 }
+
+exports = server;

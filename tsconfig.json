@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2016",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["es2016", "esnext.asynciterable", "dom", "dom.iterable", "esnext"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "allowJs": true,

@@ -1,6 +1,6 @@
 import { SLogger } from '@sutils/logger';
 import { Router, Request, Response } from 'express';
-import { getDBModel } from '@server/database/db-factory';
+import { getTagsModal } from '@server/database/db-factory';
 import { tagSerializer } from '@sutils/serializer';
 
 /**
@@ -14,7 +14,7 @@ export function makeGetTagsRouter(router: Router): Router {
   return router.get('/', async function getTags(req: Request, res: Response) {
     SLogger.debug('query', req.query);
     // 查询所有的tags
-    let model = getDBModel('tags');
+    let model = getTagsModal();
     let result = await model.find();
     SLogger.debug('result', result);
 

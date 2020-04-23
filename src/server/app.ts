@@ -5,14 +5,16 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import addRequestId from 'express-request-id';
-import { routers } from './routes';
 import logger from 'morgan';
 
 import { SLogger } from '@sutils/logger';
 
 import { enableSwaggerDocServer } from './docs';
 import { errorSerializer } from '@sutils/serializer';
-import { getDBInstance } from './database/db-factory';
+// import { getDBInstance } from './database/db-factory';
+
+import graphqlHTTP from 'express-graphql';
+import { finalSchema } from './resolvers';
 
 const app: express.Express = express();
 
@@ -30,16 +32,24 @@ app.use(logger('dev'));
 app.use(cors());
 
 // 加载route
-for (let config of routers) {
-  app.use(config.path, config.router);
-}
+// for (let config of routers) {
+//   app.use(config.path, config.router);
+// }
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: finalSchema,
+    graphiql: process.env.NODE_ENV !== 'production',
+  }),
+);
 
 app.use('/', function(req, res) {
-  res.send('hello');
+  res.send('慢慢游的奇幻世界');
 });
 
-// 数据库初始化
-getDBInstance().init();
+// 数据库初始化(第一版先不做)
+// getDBInstance().init();
 
 // swagger docs
 enableSwaggerDocServer(app);

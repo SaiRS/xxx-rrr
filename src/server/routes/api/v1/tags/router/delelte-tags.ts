@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { getDBModel } from '@server/database/db-factory';
+import { getTagsModal } from '@server/database/db-factory';
 import { IRDocument } from '@server/database/interface-define';
 import { tagSerializer } from '@sutils/serializer';
 
@@ -10,11 +10,17 @@ export function makeDeleteTagsRouter(router: Router): Router {
   ) {
     let tagId = req.params.tagId;
 
-    let modal = getDBModel('tags');
+    let modal = getTagsModal();
     let query = modal.createQuery();
-    let result: IRDocument = await query.equalTo('id', tagId).deleteOne();
+    let result: IRDocument | null = await query
+      .equalTo('id', tagId)
+      .deleteOne();
 
-    return res.json(tagSerializer(result.toJSON()));
+    if (result) {
+      return res.json(tagSerializer(result.toJSON()));
+    } else {
+      res.json(new Error(`未找到tag=${tagId}对应的记录`));
+    }
   });
 
   return router;

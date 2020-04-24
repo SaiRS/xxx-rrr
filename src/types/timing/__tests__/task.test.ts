@@ -44,6 +44,23 @@ describe('IFTimingTaskNotes', () => {
     );
   });
 
+  test('原始的notes为正常格式的字符串(全格式-乱序)', () => {
+    let raw = `@notes: notes @tags: tag1, tag2, tag3
+      @goal: goal-str
+      `;
+
+    let note = IFTimingTaskNotes.from(raw);
+    expect(note).not.toBe(null);
+    expect(note.goal).toBe('goal-str');
+    expect(note.notes).toBe('notes');
+    expect(note.tags.length).toBe(3);
+    expect(note.tags).toEqual(['tag1', 'tag2', 'tag3']);
+    expect(note.raw).toBe(raw);
+    expect(note.toString()).toBe(
+      '@tags: tag1, tag2, tag3\n@goal: goal-str\n@notes: notes',
+    );
+  });
+
   test('原始的notes为正常格式的字符串(缺少tags)', () => {
     let raw = `
       @goal: goal-str

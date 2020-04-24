@@ -49,36 +49,34 @@ export class IFTimingTaskNotes {
     }
 
     // 解析
-    let reg = /(?:@tags:(?<tags>[^@]*))?\s{0,}(?:@goal:(?<goal>[^@]*))?\s{0,}(?:@notes:(?<notes>.*))?/im;
-    let result = rawNote.match(reg);
-
     let tags: string[] = [];
     let goal = '';
     let notes = '';
 
-    if (result) {
-      // 标签
+    let tagResult = rawNote.match(/@tags:(?<tags>[^@]*)/im);
+    // 标签
+    // @ts-ignore
+    if (tagResult && tagResult.groups.tags) {
       // @ts-ignore
-      if (result.groups.tags) {
-        // @ts-ignore
-        tags = result.groups.tags
-          .trimEnd()
-          .trim()
-          .split(',')
-          .map((item) => item.trim().trimEnd());
-      }
+      tags = tagResult.groups.tags
+        .trimEnd()
+        .trim()
+        .split(',')
+        .map((item) => item.trim().trimEnd());
+    }
 
+    let goalResult = rawNote.match(/@goal:(?<goal>[^@]*)/im);
+    // @ts-ignore
+    if (goalResult && goalResult.groups.goal) {
       // @ts-ignore
-      if (result.groups.goal) {
-        // @ts-ignore
-        goal = result.groups.goal.trim().trimEnd();
-      }
+      goal = goalResult.groups.goal.trim().trimEnd();
+    }
 
+    let notesResult = rawNote.match(/@notes:(?<notes>[^@]*)/im);
+    // @ts-ignore
+    if (notesResult && notesResult.groups.notes) {
       // @ts-ignore
-      if (result.groups.notes) {
-        // @ts-ignore
-        notes = result.groups.notes.trim().trimEnd();
-      }
+      notes = notesResult.groups.notes.trim().trimEnd();
     }
 
     let taskNode = new IFTimingTaskNotes();

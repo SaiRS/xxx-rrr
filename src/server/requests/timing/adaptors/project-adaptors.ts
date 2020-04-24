@@ -1,17 +1,18 @@
-import { _IBTimingProject, _IBTimingProjectProfile } from './types';
+import { _IBTimingProject, _IBTimingProjectProfile } from './project-types';
 import { IFTimingProject, IFTimingProjectProfile } from '@root/src/types';
 import { getProjectIdFromSelfLink } from './utils';
 import { validateArray } from '@root/src/utils';
 
 /**
  * 将timing返回的项目信息转换成Timing Project
+ * 如果解析失败，则为null
  * @export
  * @param {_IBTimingProject} bInfo
- * @returns {IFTimingProject}
+ * @returns {IFTimingProject | null}
  */
 export function createTimgProjectFactory(
   bInfo: _IBTimingProject,
-): IFTimingProject {
+): IFTimingProject | null {
   let project = new IFTimingProject();
 
   // 设置值

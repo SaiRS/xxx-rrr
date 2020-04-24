@@ -1,2 +1,2 @@
-export * from './types';
-export * from './timing-project-adaptors';
+export * from './project-types';
+export * from './project-adaptors';

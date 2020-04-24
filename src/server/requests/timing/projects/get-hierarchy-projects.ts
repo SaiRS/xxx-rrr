@@ -15,3 +15,5 @@ export async function getHierarchyProjectsRequest(): Promise<
   );
   return result.data.data;
 }
+
+export default getHierarchyProjectsRequest;

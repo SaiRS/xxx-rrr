@@ -10,3 +10,4 @@ export const timingRequest = axios.create({
     'Content-Type': 'application/json',
   },
 });
+export default timingRequest;

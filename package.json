@@ -104,8 +104,9 @@
   "scripts": {
     "start": "cross-env DEBUG=app:* node scripts/start.js",
     "build": "node scripts/build.js",
-    "test:client": "cross-env DEBUG=app:* ts-node -r tsconfig-paths/register scripts/test.js src/client",
-    "test:server": "cross-env DEBUG=app:* node scripts/test.js src/server/resolvers/ --env='node' --runInBand",
+    "jest": "jest",
+    "test:client": "cross-env DEBUG=app:* node scripts/test.js src/client",
+    "test:server": "cross-env DEBUG=app:* node -r tsconfig-paths/register scripts/test.js src/server/resolvers/ --env='node'",
     "start:server": "cross-env DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",
     "start:server:watch": "nodemon --inspect "
   },
@@ -132,6 +133,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
     "@babel/runtime": "^7.8.3",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
@@ -166,6 +168,7 @@
     "autoprefixer": "^9.7.4",
     "babel-plugin-import": "^1.13.0",
     "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-polyfill": "^6.26.0",
     "chai": "^4.2.0",
     "cookie-parser": "^1.4.4",
     "cross-env": "^6.0.3",
@@ -215,75 +218,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "globalSetup": "./config/jest/global-setup.js",
-    "globalTeardown": "./config/jest/global-teardown.js",
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jest-environment-jsdom-fourteen",
-    "transform": {
-      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy",
-      "^.+\\.(css|sass|scss)$": "identity-obj-proxy",
-      "@root/(.*)": "<rootDir>/$1",
-      "@svendors/(.*)": "<rootDir>/src/server/vendors/$1",
-      "@sutils/(.*)": "<rootDir>/src/server/utils/$1",
-      "@server/(.*)": "<rootDir>/src/server/$1",
-      "@cutils/(.*)": "<rootDir>/src/client/utils/$1",
-      "@cutils": "<rootDir>/src/client/utils/index.ts",
-      "@cvendors/(.*)": "<rootDir>/src/client/vendors/$1",
-      "@client/(.*)": "<rootDir>/src/client/$1"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ],
-    "collectCoverage": false,
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": -10
-      }
-    }
   },
   "nodemonConfig": {
     "exec": "DEBUG=app:* ts-node -r tsconfig-paths/register src/server/www.ts",

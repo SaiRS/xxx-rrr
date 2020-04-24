@@ -3,7 +3,7 @@ import { IFTimingProject } from '@root/src/types';
 import { CreateTimingProjectPayload } from '@server/requests';
 
 @Resolver()
-export class TimingProjectResolvers {
+export class TimingProjectMockResolvers {
   /**
    * 以层级的形式获取项目信息
    * @returns {Promise<IFTimingProject[]>}

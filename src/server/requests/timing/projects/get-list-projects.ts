@@ -1,20 +1,6 @@
 import { timingRequest } from '../base';
 import { IFTimingProject } from '@root/src/types';
-
-// new Serializer()
-
-// interface IBTimingProject {
-//   self: string; // link链接
-//   title: string;
-//   title_chain: string[]; // 名字的层级顺序
-//   color: string; // 颜色
-//   productivity_score: number; // 0 ~ 1, 生产力分数
-//   is_archived: boolean; // 是否归档
-//   parent: {
-//     self: string;
-//   } | null;
-//   children: IBTimingProject[];
-// }
+import { _IBTimingProject, createTimgProjectFactory } from '../adaptors';
 
 /**
  * 以列表形式返回所有的项目信息
@@ -23,9 +9,9 @@ import { IFTimingProject } from '@root/src/types';
  */
 export async function getTimingProjects(): Promise<IFTimingProject[]> {
   let result = await timingRequest
-    .get<{ data: IFTimingProject[] }>('/projects')
+    .get<{ data: _IBTimingProject[] }>('/projects')
     .then((response) => {
-      return response.data.data;
+      return response.data.data.map(createTimgProjectFactory);
     });
 
   return result;

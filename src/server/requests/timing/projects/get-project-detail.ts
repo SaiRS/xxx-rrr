@@ -1,15 +1,6 @@
-import { Router, Response, Request } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
-
-import { Serializer, Error as SerializerError } from 'jsonapi-serializer';
-import { SLogger } from '@sutils/logger';
-import uuid from 'uuid';
 import { timingRequest } from '../base';
 import { IFTimingProject } from '@root/src/types';
-
-interface IParam extends ParamsDictionary {
-  projectId: string;
-}
+import { _IBTimingProject, createTimgProjectFactory } from '../adaptors';
 
 /**
  * 获取项目详情
@@ -19,11 +10,15 @@ interface IParam extends ParamsDictionary {
  */
 export async function getTimingProjectDetail(
   projectId: string,
-): Promise<IFTimingProject> {
+): Promise<IFTimingProject | null> {
   return await timingRequest
-    .get<{ data: IFTimingProject }>(`/projects/${projectId}`)
+    .get<{ data: _IBTimingProject | null }>(`/projects/${projectId}`)
     .then((response) => {
-      // 直接返回
-      return response.data.data;
+      if (response.data.data) {
+        // 适配
+        return createTimgProjectFactory(response.data.data);
+      } else {
+        return null;
+      }
     });
 }

@@ -2,6 +2,8 @@ import { ArgsType, Field } from 'type-graphql';
 import { Min, Max } from 'class-validator';
 import { timingRequest } from '../base';
 import { IFTimingProject } from '@root/src/types';
+import { _IBTimingProject, createTimgProjectFactory } from '../adaptors';
+import { getSelfLinkFromProjectId } from '../adaptors/utils';
 
 @ArgsType()
 export class CreateTimingProjectPayload {
@@ -29,10 +31,23 @@ export class CreateTimingProjectPayload {
  * @param {CreateTimingProjectPayload} payload
  * @returns
  */
-export async function createTimingProject(payload: CreateTimingProjectPayload) {
+export async function createTimingProject(
+  payload: CreateTimingProjectPayload,
+): Promise<IFTimingProject> {
+  // 判断一下要不要修改parentId的值
+  let copyPayload = { ...payload };
+  if (copyPayload.parentId) {
+    // @ts-ignore
+    // 添加真正的请求参数 parent
+    copyPayload['parent'] = {
+      self: getSelfLinkFromProjectId(copyPayload.parentId),
+    };
+
+    Reflect.deleteProperty(copyPayload, 'parentId');
+  }
   return await timingRequest
-    .post<{ data: IFTimingProject }>('projects', payload)
+    .post<{ data: _IBTimingProject }>('projects', copyPayload)
     .then((response) => {
-      return response.data.data;
+      return createTimgProjectFactory(response.data.data);
     });
 }

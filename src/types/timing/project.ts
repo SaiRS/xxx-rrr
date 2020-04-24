@@ -8,10 +8,7 @@ export class IFTimingProjectProfile {
 
 // 定义graphql中的schema
 @ObjectType()
-export class IFTimingProject {
-  @Field((type) => ID)
-  id!: string;
-
+export class IFTimingProject extends IFTimingProjectProfile {
   @Field()
   title!: string;
 
@@ -35,12 +32,13 @@ export class IFTimingProject {
   is_archived!: boolean;
 
   @Field((type) => ID, { nullable: true })
-  parentId?: string;
+  parentId?: string | null;
 
   @Field((type) => [IFTimingProjectProfile]!)
   children!: IFTimingProjectProfile[];
 
   constructor() {
+    super();
     this.title = '';
   }
 }

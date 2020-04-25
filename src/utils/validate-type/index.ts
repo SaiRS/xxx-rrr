@@ -1,9 +1,5 @@
-import { isArray } from 'is-what';
-
-export function validateArray<T = any>(arr: any, defaultValue: T[] = []): T[] {
-  if (isArray(arr)) {
-    return arr;
-  } else {
-    return defaultValue;
-  }
-}
+export * from './validate-array';
+export * from './validate-boolean';
+export * from './validate-number';
+export * from './validate-object';
+export * from './validate-string';

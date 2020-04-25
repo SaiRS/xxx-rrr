@@ -15,7 +15,11 @@ export async function getHierarchyProjectsRequest(): Promise<
   );
 
   // 适配：self -> projectId
-  return result.data.data.map((item) => createTimgProjectFactory(item));
+  return result.data.data
+    .map((item) => createTimgProjectFactory(item))
+    .filter(function filter(item): item is IFTimingProject {
+      return !!item;
+    });
 }
 
 export default getHierarchyProjectsRequest;

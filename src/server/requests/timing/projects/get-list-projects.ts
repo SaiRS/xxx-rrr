@@ -11,7 +11,11 @@ export async function getTimingProjects(): Promise<IFTimingProject[]> {
   let result = await timingRequest
     .get<{ data: _IBTimingProject[] }>('/projects')
     .then((response) => {
-      return response.data.data.map(createTimgProjectFactory);
+      return response.data.data
+        .map(createTimgProjectFactory)
+        .filter(function filter(item): item is IFTimingProject {
+          return !!item;
+        });
     });
 
   return result;

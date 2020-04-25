@@ -38,12 +38,13 @@ describe('创建project', () => {
       is_archived: false,
     });
 
-    expect(result.id).toBe('2');
-    expect(result.title).toBe(title);
-    expect(result.parentId).toBe('1');
-    expect(result.color).toBe(color);
-    expect(result.productivity_score).toBe(score);
-    expect(result.is_archived).toBe(false);
+    expect(result).not.toBe(null);
+    expect(result!.id).toBe('2');
+    expect(result!.title).toBe(title);
+    expect(result!.parentId).toBe('1');
+    expect(result!.color).toBe(color);
+    expect(result!.productivity_score).toBe(score);
+    expect(result!.is_archived).toBe(false);
   });
 });
 

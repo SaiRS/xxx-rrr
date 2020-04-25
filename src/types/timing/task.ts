@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Int } from 'type-graphql';
+import { ObjectType, Field, ID, Int, createUnionType } from 'type-graphql';
 import { IFTimingProjectProfile, IFTimingProject } from './project';
 
 /**
@@ -119,6 +119,25 @@ export class IFTimingTaskNotes {
 }
 
 /**
+ * 创建联合类型
+ * 在获取task信息时，会根据参数的不同，而携带或者不携带项目信息
+ */
+const ProjectInTaskUnion = createUnionType({
+  name: 'ProjectInTaskUnion',
+  types: () => [IFTimingProjectProfile, IFTimingProject],
+  resolveType: (value) => {
+    // 解析方法，使用title来判断
+    // 使得可以在gql语法中使用
+    // ... on IFTimingProject {}
+    // ... on IFTimingProjectProfile {}
+    if ('title' in value) {
+      return IFTimingProject;
+    }
+    return IFTimingProjectProfile;
+  },
+});
+
+/**
  * timing中task的定义
  * @export
  * @class IFTimingTask
@@ -176,8 +195,13 @@ export class IFTimingTask {
   @Field((type) => Boolean)
   is_running!: boolean;
 
-  // NOTE: 联合类型怎么写？这样子可行？事实证明不行
-  // 那有多个情况的怎么处理?
-  @Field((type) => IFTimingProjectProfile)
+  // NOTE: 此时需要联合类型
+  @Field((type) => ProjectInTaskUnion)
   project!: IFTimingProjectProfile | IFTimingProject;
+
+  constructor() {
+    this.title = '';
+    this.notes = new IFTimingTaskNotes();
+    this.is_running = false;
+  }
 }

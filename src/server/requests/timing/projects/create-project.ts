@@ -33,7 +33,7 @@ export class CreateTimingProjectPayload {
  */
 export async function createTimingProject(
   payload: CreateTimingProjectPayload,
-): Promise<IFTimingProject> {
+): Promise<IFTimingProject | null> {
   // 判断一下要不要修改parentId的值
   let copyPayload = { ...payload };
   if (copyPayload.parentId) {

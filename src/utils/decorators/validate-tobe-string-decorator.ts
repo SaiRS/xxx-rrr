@@ -1,6 +1,5 @@
 import { isString } from 'class-validator';
 import { ValidateToBeTypeDecorator } from './_util';
-import { ValidateFunc } from '@root/src/types';
 
 /**
  * 装饰属性的装饰器
@@ -19,11 +18,14 @@ import { ValidateFunc } from '@root/src/types';
  * @returns {PropertyDecorator}
  */
 export function ValidateToBeStringDecorator(
+  targetPropertyName: string = '',
   defaultValue: string = '',
 ): PropertyDecorator {
   let options = {
     defaultValue: defaultValue,
   };
 
-  return ValidateToBeTypeDecorator(isString, options);
+  return ValidateToBeTypeDecorator(isString, {
+    targetPropertyName: targetPropertyName || '',
+  });
 }

@@ -27,8 +27,17 @@ describe('decorator util', () => {
     }
 
     class Demo {
-      @CustomDecorator({})
+      private _count!: number;
+
+      @CustomDecorator('_count')
       count!: number;
+      // set count(v) {
+      //   this._count = v;
+      // }
+
+      // get count() {
+      //   return this._count;
+      // }
     }
 
     let demo = new Demo();

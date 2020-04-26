@@ -1,6 +1,5 @@
 import { isHexColor } from 'class-validator';
-import { ValidateToBeTypeDecorator } from './_util';
-import { ValidateFunc } from '@root/src/types';
+import { ValidateToBeTypeDecorator, IValidateToBeOption } from './_util';
 
 /**
  * 装饰属性的装饰器
@@ -8,17 +7,13 @@ import { ValidateFunc } from '@root/src/types';
  * @export
  * @returns {PropertyDecorator}
  */
-export function ValidateToBeColorStringDecorator({
-  format = 'hex',
-}: {
-  format?: string;
-} = {}): PropertyDecorator {
-  function validate(v: any) {
-    // NOTE: 目前只支持hex格式
-    if (isHexColor(v)) {
-      return v;
-    }
-  }
-
-  return ValidateToBeTypeDecorator(validate, {});
+export function ValidateToBeColorStringDecorator(
+  targetPropertyName: string = '',
+): PropertyDecorator {
+  // return ValidateToBeTypeDecorator<string, IValidateToBeOption>(isHexColor, {
+  //   targetPropertyName,
+  // });
+  return ValidateToBeTypeDecorator(isHexColor, {
+    targetPropertyName: targetPropertyName,
+  });
 }

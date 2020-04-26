@@ -1,5 +1,6 @@
 import { ObjectType, Field, ID, Int, createUnionType } from 'type-graphql';
 import { IFTimingProjectProfile, IFTimingProject } from './project';
+import { ValidateToBeDateStringDecorator } from '@root/src/utils';
 
 /**
  * 解析后的task notes
@@ -152,6 +153,7 @@ export class IFTimingTask {
    * @type {string}
    * @memberof IFTimingTask
    */
+  @ValidateToBeDateStringDecorator()
   @Field((type) => String)
   start_date!: string;
 

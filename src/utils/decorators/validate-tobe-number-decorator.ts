@@ -19,11 +19,14 @@ import { ValidateFunc } from '@root/src/types';
  * @returns {PropertyDecorator}
  */
 export function ValidateToBeNumberDecorator(
+  targetPropertyName: string = '',
   defaultValue: number = 0,
-): PropertyDecorator {
+) {
   let options = {
     defaultValue: defaultValue,
   };
 
-  return ValidateToBeTypeDecorator(isNumber, options);
+  return ValidateToBeTypeDecorator(isNumber, {
+    targetPropertyName: targetPropertyName || '',
+  });
 }

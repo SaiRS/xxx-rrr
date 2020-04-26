@@ -16,9 +16,12 @@ import { _IBTimingProject } from './project-types';
 export function createTimingTaskFactory(
   bInfo: _IBTimingTask,
 ): IFTimingTask | null {
+  let id = getTaskIdFromSelfLink(bInfo.self);
+  if (id === null) {
+    return null;
+  }
   let task = new IFTimingTask();
-
-  task.id = getTaskIdFromSelfLink(bInfo.self) as string;
+  task.id = id;
   task.title = bInfo.title;
 
   task.start_date = bInfo.start_date;

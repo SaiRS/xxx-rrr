@@ -10,14 +10,17 @@ import {
 
 @ObjectType()
 export class IFTimingProjectProfile {
+  private _id!: string;
+
   @Field((type) => ID)
+  @ValidateToBeStringDecorator('_id')
   id!: string;
 }
 
 // 定义graphql中的schema
 @ObjectType()
 export class IFTimingProject extends IFTimingProjectProfile {
-  @ValidateToBeStringDecorator('')
+  @ValidateToBeStringDecorator()
   @Field()
   title!: string;
 
@@ -35,7 +38,7 @@ export class IFTimingProject extends IFTimingProjectProfile {
    * @type {number}
    * @memberof IFTimingProject
    */
-  @ValidateToBeNumberDecorator(0)
+  @ValidateToBeNumberDecorator()
   @Field((type) => Float)
   productivity_score!: number;
 

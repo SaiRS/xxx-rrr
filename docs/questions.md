@@ -65,3 +65,5 @@ interface Request {
       ```
 
    4. 分
+
+7. decorator: 装饰器理解，装饰某个对象的某个属性，对于 class 属性，传入的对象是 function，对于方法装饰器（静态的传入的是 constructor 方法，实例方法是 class 的 prototype），属性装饰器也是一样，分为 static 和 instance，target 代表的意义跟方法装饰器一样。

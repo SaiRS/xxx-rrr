@@ -10,7 +10,7 @@ import { getSelfLinkFromProjectId } from '../adaptors/utils';
  * @export
  * @param {string} projectId
  * @param {Omit<CreateTimingProjectPayload, 'parentId'>} payload
- * @returns
+ * @returns {Promise<IFTimingProject | null>}
  */
 export async function updateTimingProject(
   projectId: string,

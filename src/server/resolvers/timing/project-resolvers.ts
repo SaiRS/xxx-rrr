@@ -39,7 +39,9 @@ export class TimingProjectResolvers {
    * @memberof TimingProjectResolvers
    */
   @Query((returns) => IFTimingProject)
-  async projectDetail(@Arg('projectId') projectId: string) {
+  async projectDetail(
+    @Arg('projectId') projectId: string,
+  ): Promise<IFTimingProject | null> {
     return await getTimingProjectDetail(projectId);
   }
 
@@ -49,7 +51,9 @@ export class TimingProjectResolvers {
    * @memberof TimingProjectResolvers
    */
   @Mutation((returns) => IFTimingProject)
-  async createTimingProject(@Args() payload: CreateTimingProjectPayload) {
+  async createTimingProject(
+    @Args() payload: CreateTimingProjectPayload,
+  ): Promise<IFTimingProject | null> {
     return await createTimingProject(payload);
   }
 
@@ -64,7 +68,7 @@ export class TimingProjectResolvers {
   async updateTimingProject(
     @Arg('projectId') projectId: string,
     payload: Omit<CreateTimingProjectPayload, 'parentId'>,
-  ) {
+  ): Promise<IFTimingProject | null> {
     return await updateTimingProject(projectId, payload);
   }
 }

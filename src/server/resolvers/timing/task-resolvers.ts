@@ -5,6 +5,7 @@ import {
   GetTimingTasksPayload,
   updateTimingTask,
   getTimingTaskDetail,
+  IFTaskPagination,
 } from '@server/requests';
 
 @Resolver()
@@ -12,26 +13,26 @@ export class TimingTaskResolvers {
   /**
    * 获取timing task 列表的graphql query定义
    * @param {GetTimingTasksPayload} payload
-   * @returns {Promise<IFTimingTask[]>}
+   * @returns {Promise<IFTaskPagination>}
    * @memberof TimingTaskResolvers
    */
-  @Query((returns) => [IFTimingTask])
+  @Query((returns) => [IFTaskPagination])
   async taskList(
     @Args() payload: GetTimingTasksPayload,
-  ): Promise<IFTimingTask[]> {
+  ): Promise<IFTaskPagination> {
     return getTimingTasks(payload);
   }
 
   /**
    * 获取timing task 的graphql query定义
    * @param {string} taskId
-   * @returns
+   * @returns {Promise<IFTimingTask | null>}
    * @memberof TimingTaskResolvers
    */
   @Query((returns) => IFTimingTask)
   async getTimingTaskDetail(
     @Arg('taskId') taskId: string,
-  ): Promise<IFTimingTask> {
+  ): Promise<IFTimingTask | null> {
     return getTimingTaskDetail(taskId);
   }
 

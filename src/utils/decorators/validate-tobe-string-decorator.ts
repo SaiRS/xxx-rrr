@@ -15,7 +15,7 @@ import { ValidateToBeTypeDecorator } from './_util';
  * demo.title = '3' // 成功改变title的值
  * @export
  * @param {string} [defaultValue='']
- * @returns {PropertyDecorator}
+ * @returns {PropertyDecorator} 属性装饰器
  */
 export function ValidateToBeStringDecorator(
   targetPropertyName: string = '',

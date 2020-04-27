@@ -5,7 +5,7 @@ import { ValidateFunc } from '@root/src/types';
  * 如果通过，则返回value
  * 不通过，则返回defaultValue
  * @template T
- * @param {(value: any) => boolean} typeValidFunc
+ * @param {ValidateFunc} typeValidFunc
  * @param {*} value
  * @param {T} defaultValue
  * @returns

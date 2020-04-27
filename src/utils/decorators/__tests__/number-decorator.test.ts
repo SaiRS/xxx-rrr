@@ -14,7 +14,6 @@ class Demo {
 describe('StringDecorator', () => {
   test('测试ValidateToBeStringDecorator', () => {
     let demo = new Demo();
-    console.log('==============', demo);
     expect(demo.count).toBe(5);
     // 不成功的设置
     // @ts-ignore

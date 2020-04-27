@@ -34,8 +34,7 @@ export interface IValidateToBeOption {
  * @param {ValidateFunc} validateFunc 用于类型验证的函数
  * @param {ApplyOptionFunc<OptionType, Value>} applyOptionFunc
  * @param {OptionType} options
- * @returns {PropertyDecorator}
- * @example
+ * @returns {PropertyDecorator} 属性装饰器
  *
  */
 export function ValidateToBeTypeDecorator<

@@ -96,9 +96,7 @@ export class IFTaskPaginationEdge extends PaginationEdge(IFTimingTask) {}
  * task的分页信息
  * @export
  * @class IFTaskPagination
- * @extends {PaginationResponse(
- *   IFTaskPaginationEdge,
- * )}
+ * @extends { PaginationResponse(IFTaskPaginationEdge) }
  */
 export class IFTaskPagination extends PaginationResponse(
   IFTaskPaginationEdge,

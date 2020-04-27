@@ -20,7 +20,7 @@ import { ValidateFunc } from '@root/src/types';
  *
  *  demo.date = '2019-01-01T00:00:00+00:00' //成功
  * @export
- * @returns
+ * @returns {PropertyDecorator} 属性装饰器
  */
 export function ValidateToBeDateStringDecorator(
   targetPropertyName: string = '',

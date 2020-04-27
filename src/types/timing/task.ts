@@ -1,6 +1,12 @@
 import { ObjectType, Field, ID, Int, createUnionType } from 'type-graphql';
 import { IFTimingProjectProfile, IFTimingProject } from './project';
-import { ValidateToBeDateStringDecorator } from '@root/src/utils';
+import {
+  ValidateToBeDateStringDecorator,
+  ValidateToBeNumberDecorator,
+  ValidateToBeStringDecorator,
+  ValidateToBeBooleanDecorator,
+} from '@root/src/utils';
+import { ITypeConvert } from '../type-convert';
 
 /**
  * 解析后的task notes
@@ -8,7 +14,7 @@ import { ValidateToBeDateStringDecorator } from '@root/src/utils';
  * @class IFTimingTaskNotes
  */
 @ObjectType()
-export class IFTimingTaskNotes {
+export class IFTimingTaskNotes implements ITypeConvert {
   /**
    * 任务相关的tags
    * @type {string[]}
@@ -117,6 +123,14 @@ export class IFTimingTaskNotes {
 
     this.raw = '';
   }
+
+  toObject() {
+    return {
+      tags: this.tags,
+      goal: this.goal,
+      notes: this.notes,
+    };
+  }
 }
 
 /**
@@ -144,7 +158,11 @@ const ProjectInTaskUnion = createUnionType({
  * @class IFTimingTask
  */
 @ObjectType()
-export class IFTimingTask {
+export class IFTimingTask implements ITypeConvert {
+  static type: string = 'time-entries';
+
+  type: string;
+
   @Field((type) => ID)
   id!: string;
 
@@ -162,6 +180,7 @@ export class IFTimingTask {
    * @type {string}
    * @memberof IFTimingTask
    */
+  @ValidateToBeDateStringDecorator()
   @Field((type) => String)
   end_date!: string;
 
@@ -170,6 +189,7 @@ export class IFTimingTask {
    * @type {number}
    * @memberof IFTimingTask
    */
+  @ValidateToBeNumberDecorator()
   @Field((type) => Int)
   duration!: number;
 
@@ -178,11 +198,12 @@ export class IFTimingTask {
    * @type {string}
    * @memberof IFTimingTask
    */
+  @ValidateToBeStringDecorator()
   @Field((type) => String, { nullable: true })
   title?: string;
 
   /**
-   * 备注
+   * 任务note
    * @type {string}
    * @memberof IFTimingTask
    */
@@ -194,6 +215,7 @@ export class IFTimingTask {
    * @type {boolean}
    * @memberof IFTimingTask
    */
+  @ValidateToBeBooleanDecorator()
   @Field((type) => Boolean)
   is_running!: boolean;
 
@@ -202,8 +224,22 @@ export class IFTimingTask {
   project!: IFTimingProjectProfile | IFTimingProject;
 
   constructor() {
+    this.type = IFTimingTask.type;
     this.title = '';
     this.notes = new IFTimingTaskNotes();
     this.is_running = false;
+  }
+
+  toObject() {
+    return {
+      id: this.id,
+      start_date: this.start_date,
+      end_date: this.end_date,
+      duration: this.duration,
+      title: this.title,
+      notes: this.notes.toObject(),
+      is_running: this.is_running,
+      project: this.project.toObject(),
+    };
   }
 }

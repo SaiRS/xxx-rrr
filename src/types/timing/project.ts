@@ -7,19 +7,36 @@ import {
   ValidateToBeStringDecorator,
   ValidateToBeNumberDecorator,
 } from '@root/src/utils';
+import { ITypeConvert } from '../type-convert';
 
 @ObjectType()
-export class IFTimingProjectProfile {
-  private _id!: string;
+export class IFTimingProjectProfile implements ITypeConvert {
+  static type: string = 'projects';
+  type: string;
 
   @Field((type) => ID)
-  @ValidateToBeStringDecorator('_id')
+  @ValidateToBeStringDecorator()
   id!: string;
+
+  valueOf() {
+    return this.toObject();
+  }
+
+  toObject() {
+    return {
+      id: this.id,
+    };
+  }
+
+  constructor() {
+    this.type = IFTimingProjectProfile.type;
+  }
 }
 
 // 定义graphql中的schema
 @ObjectType()
-export class IFTimingProject extends IFTimingProjectProfile {
+export class IFTimingProject extends IFTimingProjectProfile
+  implements ITypeConvert {
   @ValidateToBeStringDecorator()
   @Field()
   title!: string;
@@ -62,5 +79,17 @@ export class IFTimingProject extends IFTimingProjectProfile {
     this.is_archived = false;
     this.parentId = null;
     this.children = [];
+  }
+
+  toObject() {
+    return {
+      ...super.toObject(),
+      title: this.title,
+      color: this.color,
+      productivity_score: this.productivity_score,
+      is_archived: this.is_archived,
+      parentId: this.parentId,
+      children: this.children.map((item) => item.toObject()),
+    };
   }
 }

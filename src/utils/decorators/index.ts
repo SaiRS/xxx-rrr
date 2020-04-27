@@ -1,7 +1,1 @@
-// string类型
-export * from './validate-tobe-color-decorator';
-export * from './validate-tobe-date-string-decorator';
-export * from './validate-tobe-string-decorator';
-
-// number类型
-export * from './validate-tobe-number-decorator';
+export * from './validate-to-be';

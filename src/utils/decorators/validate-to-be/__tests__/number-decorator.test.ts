@@ -11,8 +11,8 @@ class Demo {
   }
 }
 
-describe('StringDecorator', () => {
-  test('测试ValidateToBeStringDecorator', () => {
+describe('NumberDecorator', () => {
+  test('测试ValidateToBeNumberDecorator', () => {
     let demo = new Demo();
     expect(demo.count).toBe(5);
     // 不成功的设置

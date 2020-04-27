@@ -69,7 +69,7 @@ export const getSelfLinkFromProjectId = _.partial(
  */
 export const getTaskIdFromSelfLink = _.partial(
   getIdFromSelfLink,
-  /\/tasks\/(.*)$/,
+  /\/time-entries\/(.*)$/,
 );
 
 /**
@@ -78,4 +78,7 @@ export const getTaskIdFromSelfLink = _.partial(
  * @param {string} projectId
  * @returns {string}
  */
-export const getSelfLinkFromTaskId = _.partial(getSelfLinkFromId, 'tasks');
+export const getSelfLinkFromTaskId = _.partial(
+  getSelfLinkFromId,
+  'time-entries',
+);

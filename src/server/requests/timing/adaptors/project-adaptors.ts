@@ -1,12 +1,7 @@
 import { _IBTimingProject, _IBTimingProjectProfile } from './project-types';
 import { IFTimingProject, IFTimingProjectProfile } from '@root/src/types';
 import { getProjectIdFromSelfLink } from './utils';
-import {
-  validateToBeArray,
-  validateToBeBoolean,
-  validateToBeString,
-  validateToBeNumber,
-} from '@root/src/utils';
+import { validateToBeArray } from '@root/src/utils';
 
 /**
  * 将timing返回的项目信息转换成Timing Project

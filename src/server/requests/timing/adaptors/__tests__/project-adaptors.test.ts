@@ -5,6 +5,7 @@ import {
   createTimgProjectFactory,
 } from '../project-adaptors';
 import { _IBTimingProjectProfile, _IBTimingProject } from '../project-types';
+import { isHexColor } from 'class-validator';
 
 describe('createTimingProjectProfileFactory', () => {
   test('正常情况', () => {
@@ -14,7 +15,7 @@ describe('createTimingProjectProfileFactory', () => {
 
     let result = createTimingProjectProfileFactory(data);
     expect(result).not.toBe(null);
-    expect(result).toEqual({
+    expect(result!.toObject()).toEqual({
       id: '2',
     });
   });
@@ -28,7 +29,7 @@ describe('createTimingProjectProfileFactory', () => {
 
     let result = createTimingProjectProfileFactory(data);
     expect(result).not.toBe(null);
-    expect(result).toEqual({
+    expect(result!.toObject()).toEqual({
       id: '2',
     });
   });
@@ -63,7 +64,7 @@ describe('createTimgProjectFactory', () => {
     let result = createTimgProjectFactory(data);
 
     expect(result).not.toBe(null);
-    expect(result).toMatchObject({
+    expect(result!.toObject()).toMatchObject({
       id: '1',
       title: 'Project at root level',
       color: '#FF0000',
@@ -75,6 +76,37 @@ describe('createTimgProjectFactory', () => {
     expect(result!.children[0]).toMatchObject({
       id: '2',
     });
+  });
+
+  test('缺少字段(color)', () => {
+    // @ts-ignore
+    let data: _IBTimingProject = {
+      self: '/projects/1',
+      title: 'Project at root level',
+      title_chain: ['Project at root level'],
+      productivity_score: 1,
+      is_archived: false,
+      children: [
+        {
+          self: '/projects/2',
+        },
+      ],
+      parent: null,
+    };
+
+    let result = createTimgProjectFactory(data);
+
+    expect(result).not.toBe(null);
+    expect(result!.toObject()).toMatchObject({
+      id: '1',
+      title: 'Project at root level',
+      // 此时color是个随机值,暂时不验证
+      productivity_score: 1,
+      is_archived: false,
+      children: [{ id: '2' }],
+      parentId: null,
+    });
+    expect(isHexColor(result!.color)).toBe(true);
   });
 
   test('缺少字段(title)', () => {
@@ -96,7 +128,7 @@ describe('createTimgProjectFactory', () => {
     let result = createTimgProjectFactory(data);
 
     expect(result).not.toBe(null);
-    expect(result).toMatchObject({
+    expect(result!.toObject()).toMatchObject({
       id: '1',
       title: '', // 默认值
       color: '#FF0000',

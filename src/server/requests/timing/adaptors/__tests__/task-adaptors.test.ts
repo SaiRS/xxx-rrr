@@ -24,5 +24,25 @@ describe('task-adaptor', () => {
     };
 
     let task = createTimingTaskFactory(data);
+
+    expect(task).not.toBe(null);
+    expect(task!.toObject()).toMatchObject({
+      id: '1',
+      // 时间暂时不做验证，因为在转换的时候会修改format
+      // start_date: '2019-01-01T00:00:00.000000+00:00',
+      // end_date: '2019-01-01T01:00:00.000000+00:00',
+      duration: 3600,
+      project: {
+        id: '1',
+        title: 'Project at root level',
+        color: '#FF0000',
+        productivity_score: 1,
+        is_archived: false,
+        parentId: null,
+      },
+      title: 'Client Meeting',
+      notes: {},
+      is_running: false,
+    });
   });
 });

@@ -5,7 +5,7 @@ import { IFTimingProject } from 'src/types';
 /**
  * 获取timing中的project详情
  * @export
- * @returns {Promise<IFTimingProject ｜ null>} 层级关系的projects
+ * @returns { Promise<IFTimingProject | null>} 层级关系的projects
  */
 export async function getProjectDetail(
   projectId: string,

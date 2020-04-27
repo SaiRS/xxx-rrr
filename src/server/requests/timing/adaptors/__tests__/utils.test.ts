@@ -2,7 +2,7 @@ import { getSelfLinkFromTaskId, getTaskIdFromSelfLink } from '../utils';
 
 describe('getSelfLinkFromTaskId', () => {
   test('传入正常的string参数', () => {
-    expect(getSelfLinkFromTaskId('1')).toBe('/tasks/1');
+    expect(getSelfLinkFromTaskId('1')).toBe('/time-entries/1');
   });
 
   test('传入类型不正确的参数', () => {
@@ -20,7 +20,7 @@ describe('getSelfLinkFromTaskId', () => {
 
 describe('getTaskIdFromSelfLink', () => {
   test('正确的参数', () => {
-    expect(getTaskIdFromSelfLink('/tasks/3')).toBe('3');
+    expect(getTaskIdFromSelfLink('/time-entries/3')).toBe('3');
   });
 
   test('模式匹配不正确的参数', () => {

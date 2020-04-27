@@ -6,8 +6,6 @@ import { _IBTimingTask } from '../adaptors/task-types';
 import { createTimingTaskFactory } from '../adaptors/task-adaptors';
 import { PaginationResponse } from '@root/src/types';
 
-import { Base64 } from 'js-base64';
-
 @ArgsType()
 export class GetTimingTasksPayload {
   /**
@@ -133,10 +131,10 @@ function createTaskPaginationFrom(
   taskPagination.totalCount = meta.total;
 
   // page info
-  taskPagination.pageInfo.currentCursor = Base64.encode(meta.current_page + '');
-  taskPagination.pageInfo.endCursor = Base64.encode(meta.last_page + '1');
-  taskPagination.pageInfo.hasNextPage = meta.current_page === meta.last_page;
-  taskPagination.pageInfo.startCursor = Base64.encode('1');
+  taskPagination.pageInfo.currentCursor = meta.current_page + '';
+  taskPagination.pageInfo.endCursor = meta.last_page + '';
+  taskPagination.pageInfo.hasNextPage = meta.current_page !== meta.last_page;
+  taskPagination.pageInfo.startCursor = '1';
 
   // edges
   taskPagination.edges = list
@@ -146,7 +144,7 @@ function createTaskPaginationFrom(
         let edge = new IFTaskPaginationEdge();
 
         edge.node = node;
-        edge.cursor = Base64.encode(meta.current_page + '');
+        edge.cursor = meta.current_page + '';
 
         return edge;
       } else {

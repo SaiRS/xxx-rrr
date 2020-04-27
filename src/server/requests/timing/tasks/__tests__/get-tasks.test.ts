@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Base64 } from 'js-base64';
 
 import timingRequest from '../../base';
 import { getTimingTasks } from '../get-tasks';
@@ -42,6 +43,36 @@ test('get tasks', async () => {
 
   expect(result).not.toBe(null);
   expect(result.totalCount).toBe(1);
+  expect(result!.pageInfo.toObject()).toEqual({
+    startCursor: Base64.encode('1'),
+    endCursor: Base64.encode('1'),
+    currentCursor: Base64.encode('1'),
+    hasNextPage: false,
+  });
+
+  expect(result!.edges.length).toBe(1);
+  expect(result!.edges[0].toObject()).toMatchObject({
+    cursor: Base64.encode('1'),
+    node: {
+      id: '1',
+      duration: 3600,
+      title: 'Client Meeting',
+      is_running: false,
+      notes: {
+        tags: [],
+        goal: '',
+        notes: '',
+      },
+      project: {
+        id: '1',
+        title: 'Project at root level',
+        color: '#FF0000',
+        productivity_score: 1,
+        is_archived: false,
+        parentId: null,
+      },
+    },
+  });
 });
 
 afterAll(() => {

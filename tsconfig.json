@@ -1,23 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "ES2016",
+    "lib": ["es2016", "esnext.asynciterable", "dom", "dom.iterable", "esnext"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "sourceMap": true,
     "jsx": "react",
     "baseUrl": ".",
     "paths": {
-      "@utils/*": ["src/utils/*"],
-      "@vendors/*": ["src/vendors/*"]
+      "@svendros/*": ["src/server/vendors/*"],
+      "@sutils/*": ["src/server/utils/*"],
+      "@server/*": ["src/server/*"],
+
+      "@cutils": ["src/client/utils/index"],
+      "@cutils/*": ["src/client/utils/*"],
+      "@cvendors/*": ["src/client/vendors/*"],
+      "@client/*": ["src/client/*"],
+
+      "@root/*": ["./*"]
     }
   },
   "include": ["src"]

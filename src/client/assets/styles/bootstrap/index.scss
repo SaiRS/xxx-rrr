@@ -1,0 +1,7 @@
+// Override default variables before the import
+
+// 我们可以自定义bootstrap的样式
+// $body-bg: #000;
+
+// Import Bootstrap and its default variables
+@import '~bootstrap/scss/bootstrap.scss';
